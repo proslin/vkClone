@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NavigationBarCustom" customModule="vkClient" customModuleProvider="target">
+            <connections>
+                <outlet property="LeftButton" destination="TTN-q3-kbV" id="bQR-op-LXu"/>
+                <outlet property="pageTitle" destination="1zX-eb-CeM" id="GPd-MY-ycR"/>
+                <outlet property="rightButton" destination="TBt-rg-vuc" id="e8a-Du-9yY"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" userLabel="Content View">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bm6-fW-5w6">
+                    <rect key="frame" x="0.0" y="44" width="419" height="44"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TTN-q3-kbV">
+                            <rect key="frame" x="0.0" y="0.0" width="36" height="44"/>
+                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" image="chevron.backward" catalog="system"/>
+                            <connections>
+                                <action selector="leftButtonTapped:" destination="-1" eventType="touchUpInside" id="2qm-eh-iab"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1zX-eb-CeM">
+                            <rect key="frame" x="188.5" y="11.5" width="42" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TBt-rg-vuc">
+                            <rect key="frame" x="371" y="0.0" width="44" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="44" id="ntj-Rv-gA5"/>
+                            </constraints>
+                            <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain"/>
+                            <connections>
+                                <action selector="rightButtonTapped:" destination="-1" eventType="touchUpInside" id="1Kd-AA-NZt"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="1zX-eb-CeM" firstAttribute="centerX" secondItem="bm6-fW-5w6" secondAttribute="centerX" id="AxO-lH-EuF"/>
+                        <constraint firstAttribute="trailing" secondItem="TBt-rg-vuc" secondAttribute="trailing" constant="4" id="ESB-BC-8IP"/>
+                        <constraint firstItem="1zX-eb-CeM" firstAttribute="centerY" secondItem="bm6-fW-5w6" secondAttribute="centerY" id="Pul-d9-48l"/>
+                        <constraint firstItem="TTN-q3-kbV" firstAttribute="leading" secondItem="bm6-fW-5w6" secondAttribute="leading" id="Xgj-D0-nz3"/>
+                        <constraint firstItem="TBt-rg-vuc" firstAttribute="top" secondItem="bm6-fW-5w6" secondAttribute="top" id="aom-QF-IY8"/>
+                        <constraint firstItem="TTN-q3-kbV" firstAttribute="top" secondItem="bm6-fW-5w6" secondAttribute="top" id="dob-fe-kba"/>
+                        <constraint firstAttribute="bottom" secondItem="TTN-q3-kbV" secondAttribute="bottom" id="o6Z-fk-IRz"/>
+                        <constraint firstAttribute="bottom" secondItem="TBt-rg-vuc" secondAttribute="bottom" id="o73-ph-Dq5"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="bm6-fW-5w6" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="BR4-Mb-48G"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="bm6-fW-5w6" secondAttribute="bottom" id="IU9-Xu-RiM"/>
+                <constraint firstItem="bm6-fW-5w6" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="M3y-KO-3K7"/>
+                <constraint firstItem="bm6-fW-5w6" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" constant="5" id="yYv-Z1-fWI"/>
+            </constraints>
+            <nil key="simulatedTopBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="2.8985507246376816" y="24.107142857142858"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="chevron.backward" catalog="system" width="96" height="128"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

@@ -69,7 +69,7 @@ class LoginFormController: UIViewController {
         scrollView?.scrollIndicatorInsets = contentInsets
     }
     
-    //когда клавиатура исчезает
+    // MARK:- когда клавиатура исчезает
     @objc func keyboardWillBeHidden(notification: Notification) {
         // устанавливаем отступ внизу UIScrollView равный 0
         let contentInsets = UIEdgeInsets.zero
