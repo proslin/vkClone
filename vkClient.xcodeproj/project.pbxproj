@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		700900A72913B076007C5B43 /* GroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700900A62913B076007C5B43 /* GroupList.swift */; };
 		707B31CA290FA34000C67642 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707B31C9290FA34000C67642 /* LoginVC.swift */; };
 		70934181290FCADE00838961 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70934180290FCADE00838961 /* Session.swift */; };
 		70934184290FE7C100838961 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70934183290FE7C100838961 /* NetworkManager.swift */; };
@@ -36,8 +37,6 @@
 		70FABCD92909716300618A98 /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FABCD82909716300618A98 /* UIHelper.swift */; };
 		70FABCDE290A664700618A98 /* NavigationBarCustom.xib in Resources */ = {isa = PBXBuildFile; fileRef = 70FABCDD290A664700618A98 /* NavigationBarCustom.xib */; };
 		70FABCE0290A745E00618A98 /* NavigationBarCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FABCDF290A745E00618A98 /* NavigationBarCustom.swift */; };
-		70FABCE2290AA30B00618A98 /* NavBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FABCE1290AA30B00618A98 /* NavBarView.swift */; };
-		70FABCE4290AA36800618A98 /* NavBarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 70FABCE3290AA36800618A98 /* NavBarView.xib */; };
 		70FEB43B28EFF30200A7836F /* FriendCellXib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FEB43928EFF30200A7836F /* FriendCellXib.swift */; };
 		70FEB43C28EFF30200A7836F /* FriendCellXib.xib in Resources */ = {isa = PBXBuildFile; fileRef = 70FEB43A28EFF30200A7836F /* FriendCellXib.xib */; };
 		70FEB43E28F3E62200A7836F /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FEB43D28F3E62200A7836F /* AvatarView.swift */; };
@@ -63,6 +62,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		700900A62913B076007C5B43 /* GroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupList.swift; sourceTree = "<group>"; };
 		707B31C9290FA34000C67642 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		70934180290FCADE00838961 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		70934183290FE7C100838961 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
@@ -96,8 +96,6 @@
 		70FABCD82909716300618A98 /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelper.swift; sourceTree = "<group>"; };
 		70FABCDD290A664700618A98 /* NavigationBarCustom.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NavigationBarCustom.xib; sourceTree = "<group>"; };
 		70FABCDF290A745E00618A98 /* NavigationBarCustom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarCustom.swift; sourceTree = "<group>"; };
-		70FABCE1290AA30B00618A98 /* NavBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarView.swift; sourceTree = "<group>"; };
-		70FABCE3290AA36800618A98 /* NavBarView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NavBarView.xib; sourceTree = "<group>"; };
 		70FEB43928EFF30200A7836F /* FriendCellXib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendCellXib.swift; sourceTree = "<group>"; };
 		70FEB43A28EFF30200A7836F /* FriendCellXib.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FriendCellXib.xib; sourceTree = "<group>"; };
 		70FEB43D28F3E62200A7836F /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
@@ -285,8 +283,6 @@
 			children = (
 				70FABCDD290A664700618A98 /* NavigationBarCustom.xib */,
 				70FABCDF290A745E00618A98 /* NavigationBarCustom.swift */,
-				70FABCE1290AA30B00618A98 /* NavBarView.swift */,
-				70FABCE3290AA36800618A98 /* NavBarView.xib */,
 			);
 			path = NavigationBar;
 			sourceTree = "<group>";
@@ -315,6 +311,7 @@
 				70FEB44028F3E84200A7836F /* Friend.swift */,
 				70FEB44228F3E85300A7836F /* Group.swift */,
 				709341872910F6DF00838961 /* Photos.swift */,
+				700900A62913B076007C5B43 /* GroupList.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -438,7 +435,6 @@
 				70B87B4828DD8C3C00FE99DE /* Assets.xcassets in Resources */,
 				70FABCDE290A664700618A98 /* NavigationBarCustom.xib in Resources */,
 				7099B52928F590AA00B61FF4 /* FriendPhotoCellXib.xib in Resources */,
-				70FABCE4290AA36800618A98 /* NavBarView.xib in Resources */,
 				70B87B4628DD8C3A00FE99DE /* Main.storyboard in Resources */,
 				70FABCD62909378A00618A98 /* AllGroupCell.xib in Resources */,
 			);
@@ -467,7 +463,6 @@
 			files = (
 				7099B52828F590AA00B61FF4 /* FriendPhotoCellXib.swift in Sources */,
 				70DD870D28FE736D00D71829 /* FriendsPhotoVC.swift in Sources */,
-				70FABCE2290AA30B00618A98 /* NavBarView.swift in Sources */,
 				70C3F0E2290C1045009282A2 /* VKLabel.swift in Sources */,
 				70934184290FE7C100838961 /* NetworkManager.swift in Sources */,
 				70FEB44328F3E85300A7836F /* Group.swift in Sources */,
@@ -480,6 +475,7 @@
 				709341882910F6DF00838961 /* Photos.swift in Sources */,
 				70FEB44128F3E84200A7836F /* Friend.swift in Sources */,
 				70FABCD92909716300618A98 /* UIHelper.swift in Sources */,
+				700900A72913B076007C5B43 /* GroupList.swift in Sources */,
 				70FABCD22909368E00618A98 /* AllGroupsVC.swift in Sources */,
 				70DD870F28FED67000D71829 /* UserGroupsVC.swift in Sources */,
 				70934181290FCADE00838961 /* Session.swift in Sources */,

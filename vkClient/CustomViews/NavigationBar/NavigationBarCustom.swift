@@ -13,6 +13,7 @@ class NavigationBarCustom: UIView {
     @IBOutlet private weak var pageTitle: UILabel!
     @IBOutlet private weak var rightButton: UIButton!
     @IBOutlet private weak var LeftButton: UIButton!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     
     var view: UIView!
@@ -45,8 +46,10 @@ class NavigationBarCustom: UIView {
         addSubview(view)
         LeftButton.isHidden = true
         rightButton.isHidden = true
+        searchBar.isHidden = true
         pageTitle.textColor = VKColors.labelColor
         pageTitle.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        searchBar.searchTextField.textColor = VKColors.labelColor
         //pageTitle.text = "TestTitle"
     }
     
@@ -63,6 +66,10 @@ class NavigationBarCustom: UIView {
     }
     @IBAction func rightButtonTapped(_ sender: Any) {
         rightButtonAction?()
+    }
+    
+    public func showSearchBar() {
+        searchBar.isHidden = false
     }
     
     public func hideLeftButton() {
@@ -84,6 +91,9 @@ class NavigationBarCustom: UIView {
     public func setRighButtonImage(imagename: String) {
         rightButton.setImage(UIImage(systemName: imagename), for: .normal)
         //button.setImage(UIImage(systemName: "search"), for: .normal)
+    }
+    public func hideTitle() {
+        pageTitle.isHidden = true
     }
     
     public func setTitle(title: String) {

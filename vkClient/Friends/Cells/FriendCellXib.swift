@@ -13,20 +13,16 @@ class FriendCellXib: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         self.selectionStyle = .none
-        // Configure the view for the selected state
     }
     
     func set(friend: Friend) {
-        friendName.text = friend.firstName + friend.lastName
+        friendName.text =  "\(friend.firstName) \(friend.lastName)"
         friendName.textColor = VKColors.labelColor
-        //guard let avatarImage = avatarView.imageView.image else { return }
-            // avatarView.imageView.image = UIImage(named: friend.friendAvatarURL)
         NetworkManager.shared.downloadAvatar(from: friend.friendAvatarURL, to: avatarView.imageView)
     }
     

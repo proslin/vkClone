@@ -13,6 +13,7 @@
                 <outlet property="LeftButton" destination="TTN-q3-kbV" id="bQR-op-LXu"/>
                 <outlet property="pageTitle" destination="1zX-eb-CeM" id="GPd-MY-ycR"/>
                 <outlet property="rightButton" destination="TBt-rg-vuc" id="e8a-Du-9yY"/>
+                <outlet property="searchBar" destination="yds-ga-Mn5" id="PAJ-Dq-79l"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -50,16 +51,24 @@
                                 <action selector="rightButtonTapped:" destination="-1" eventType="touchUpInside" id="1Kd-AA-NZt"/>
                             </connections>
                         </button>
+                        <searchBar contentMode="redraw" searchBarStyle="minimal" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yds-ga-Mn5">
+                            <rect key="frame" x="36" y="0.0" width="373" height="44"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </searchBar>
                     </subviews>
                     <constraints>
+                        <constraint firstAttribute="bottom" secondItem="yds-ga-Mn5" secondAttribute="bottom" id="098-hh-aOf"/>
                         <constraint firstItem="1zX-eb-CeM" firstAttribute="centerX" secondItem="bm6-fW-5w6" secondAttribute="centerX" id="AxO-lH-EuF"/>
                         <constraint firstAttribute="trailing" secondItem="TBt-rg-vuc" secondAttribute="trailing" constant="4" id="ESB-BC-8IP"/>
                         <constraint firstItem="1zX-eb-CeM" firstAttribute="centerY" secondItem="bm6-fW-5w6" secondAttribute="centerY" id="Pul-d9-48l"/>
+                        <constraint firstItem="yds-ga-Mn5" firstAttribute="leading" secondItem="TTN-q3-kbV" secondAttribute="trailing" id="Rdo-EH-NeI"/>
                         <constraint firstItem="TTN-q3-kbV" firstAttribute="leading" secondItem="bm6-fW-5w6" secondAttribute="leading" id="Xgj-D0-nz3"/>
                         <constraint firstItem="TBt-rg-vuc" firstAttribute="top" secondItem="bm6-fW-5w6" secondAttribute="top" id="aom-QF-IY8"/>
                         <constraint firstItem="TTN-q3-kbV" firstAttribute="top" secondItem="bm6-fW-5w6" secondAttribute="top" id="dob-fe-kba"/>
+                        <constraint firstAttribute="trailing" secondItem="yds-ga-Mn5" secondAttribute="trailing" constant="10" id="hK0-JG-ivR"/>
                         <constraint firstAttribute="bottom" secondItem="TTN-q3-kbV" secondAttribute="bottom" id="o6Z-fk-IRz"/>
                         <constraint firstAttribute="bottom" secondItem="TBt-rg-vuc" secondAttribute="bottom" id="o73-ph-Dq5"/>
+                        <constraint firstItem="yds-ga-Mn5" firstAttribute="top" secondItem="bm6-fW-5w6" secondAttribute="top" id="skt-AC-fBV"/>
                     </constraints>
                 </view>
             </subviews>

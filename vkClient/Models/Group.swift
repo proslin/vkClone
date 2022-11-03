@@ -16,13 +16,16 @@ struct ResponseGroup: Codable {
     let items: [Group]
 }
 
-struct Group: Codable,Equatable {
+struct Group: Codable, Equatable {
     var groupName: String
     var groupAvatarURL: String
-   // var memberCount: Int
+    var membersCount: Int?
+    var groupId: Int
     enum CodingKeys: String, CodingKey {
         case groupName = "name"
         case groupAvatarURL = "photo_100"
+        case membersCount = "members_count"
+        case groupId = "id"
     }
 }
 

@@ -14,44 +14,65 @@ class AllGroupsVC: UIViewController {
     
     var allgroups: [Group] = []
     var delegate: SelectedGroupDelegate?
+    var group: String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        generateAllGroups()
         tableView.register(UINib(nibName: String(describing: AllGroupCell.self), bundle: nil), forCellReuseIdentifier: String(describing: AllGroupCell.self))
         tableView.dataSource = self
         tableView.delegate = self
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 80
         setNavigationBar()
+        navigationBar.searchBar.delegate = self
         
     }
     
-    private func generateAllGroups() {
-//        let group1 = Group(groupName: "Group1", groupAvatarURL: "allgroup", memberCount: 5)
-//        let group2 = Group(groupName: "Group2", groupAvatarURL: "group1", memberCount: 1)
-//        let group3 = Group(groupName: "Group3", groupAvatarURL: "group2", memberCount: 7)
-//        let group4 = Group(groupName: "Group4", groupAvatarURL: "allgroup", memberCount: 8)
-//        let group5 = Group(groupName: "Group5", groupAvatarURL: "sky", memberCount: 40)
-//        
-//        allgroups.append(group1)
-//        allgroups.append(group2)
-//        allgroups.append(group3)
-//        allgroups.append(group4)
-//        allgroups.append(group5)
-//        tableView.reloadData()
-    }
-    
     private func setNavigationBar() {
-        navigationBar.setTitle(title: "Группы")
+        navigationBar.showSearchBar()
+        navigationBar.hideTitle()
         navigationBar.showLeftButton()
         navigationBar.setLeftButtonAction {
             self.navigationController?.popViewController(animated: true)
         }
     }
     
+    private func getGroups(searchRequest: String) {
+        NetworkManager.shared.getSearchGroups(for: searchRequest) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+                
+            case .success(let groups):
+                var ids = groups.reduce("") { $0 + String($1.groupId) + "," }
+                ids.removeLast(1)
+                self.getGroupsList(groupsIds: ids)
+            case .failure(let error):
+                print(error.rawValue)
+            }
+        }
+    }
+    
+
+    private func getGroupsList(groupsIds: String) {
+        NetworkManager.shared.getGroupsList(for: groupsIds) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+                
+            case .success(let groups):
+                self.allgroups = groups
+                DispatchQueue.main.async { self.tableView.reloadData() }
+                
+            case .failure(let error):
+                print(error.rawValue)
+            }
+    }
+    }
+    
 }
 
+// MARK: UITableViewDataSource
 extension AllGroupsVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return allgroups.count
@@ -66,6 +87,7 @@ extension AllGroupsVC: UITableViewDataSource {
     
 }
 
+// MARK: UITableViewDelegate
 extension AllGroupsVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
@@ -78,3 +100,29 @@ extension AllGroupsVC: UITableViewDelegate {
     }
 }
 
+// MARK: UISearchBarDelegate
+extension AllGroupsVC: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print("Ввели запрос - \(searchText)")
+        if !searchText.isEmpty{
+        getGroups(searchRequest: searchText)
+        } else {
+            self.allgroups.removeAll()
+            self.tableView.reloadData()
+        }
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = true
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = false
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+        self.allgroups.removeAll()
+        self.tableView.reloadData()
+    }
+}
+
+}

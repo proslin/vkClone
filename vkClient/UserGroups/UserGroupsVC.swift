@@ -20,13 +20,7 @@ class UserGroupsVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-      //  generateGroups()
         getGroups()
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
         tableView.register(UINib(nibName: String(describing: UserGroupCell.self), bundle: nil), forCellReuseIdentifier: String(describing: UserGroupCell.self))
         self.tableView.dataSource = self
         setNavigationBar()
@@ -47,15 +41,6 @@ class UserGroupsVC: UIViewController {
             }
         }
     }
-//    private func generateGroups() {
-//        let group1 = Group(groupName: "Group1", groupAvatarURL: "group1", memberCount: 3)
-//        let group2 = Group(groupName: "Group2", groupAvatarURL: "sky", memberCount: 5)
-//
-//        groups.append(group1)
-//        groups.append(group2)
-//
-//        tableView.reloadData()
-//    }
     
     private func setNavigationBar() {
         navigationBar.setTitle(title: "Группы пользователя")

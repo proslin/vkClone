@@ -92,43 +92,95 @@ struct NetworkManager {
         task.resume()
     }
     
-//    func getPhotos(for friendId: String, offset: Int, completed: @escaping (Result<[Photo], ErrorMessage>) -> Void) {
-//        let urlRequest = baseUrl + "/photos.getAll?owner_id=\(friendId)&access_token=\(token)&v=5.131&count=200&offset=\(offset)"
-//
-//        guard let url = URL(string: urlRequest) else {
-//            completed(.failure(.invalidUsername))
-//            return
-//        }
-//        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-//
-//            if let _ = error {
-//                completed(.failure(.unableToComplete))
-//            }
-//
-//            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-//                completed(.failure(.invalidResponse))
-//                return
-//            }
-//
-//            guard let data = data else {
-//                completed(.failure(.invalidData))
-//                return
-//            }
-//
-//            do {
-//                let decoder = JSONDecoder()
-//                let photosResponse = try decoder.decode(PhotosResponse.self, from: data)
-//                let photos = photosResponse.response.items
-//                completed(.success(photos))
-//            } catch {
-//                print(error)
-//                completed(.failure(.invalidData))
-//                return
-//            }
-//        }
-//
-//        task.resume()
-//    }
+    
+    func getSearchGroups(for searchRequest: String, completed: @escaping (Result<[Group], ErrorMessage>) -> Void) {
+        let urlComponents = makeUrlComponentsForSearch(with: searchRequest)
+        guard let url = urlComponents.url else {
+            completed(.failure(.invalidUsername))
+            return
+        }
+        print(url)
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            
+            if let _ = error {
+                completed(.failure(.unableToComplete))
+            }
+            
+            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                completed(.failure(.invalidResponse))
+                return
+            }
+            
+            guard let data = data else {
+                completed(.failure(.invalidData))
+                return
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                let groupsResponse = try decoder.decode(GroupsResponse.self, from: data)
+                let groups = groupsResponse.response.items
+                completed(.success(groups))
+            } catch {
+                print(error)
+                completed(.failure(.invalidData))
+                return
+            }
+        }
+        
+        task.resume()
+    }
+    
+    func getGroupsList(for groupsIds: String, completed: @escaping (Result<[Group], ErrorMessage>) -> Void) {
+        let urlRequest = baseUrl + "/groups.getById?group_ids=\(groupsIds)&access_token=\(token)&v=5.124&fields=members_count"
+        
+        guard let url = URL(string: urlRequest) else {
+            completed(.failure(.invalidUsername))
+            return
+        }
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            
+            if let _ = error {
+                completed(.failure(.unableToComplete))
+            }
+            
+            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                completed(.failure(.invalidResponse))
+                return
+            }
+            
+            guard let data = data else {
+                completed(.failure(.invalidData))
+                return
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                let groupsResponse = try decoder.decode(GroupsListResponse.self, from: data)
+                let groups = groupsResponse.response
+                completed(.success(groups))
+            } catch {
+                print(error)
+                completed(.failure(.invalidData))
+                return
+            }
+        }
+        
+        task.resume()
+    }
+    
+    private func makeUrlComponentsForSearch(with query: String) -> URLComponents {
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = "api.vk.com"
+        urlComponents.path = "/method/groups.search"
+        urlComponents.queryItems = [
+            URLQueryItem(name: "q", value: query),
+            URLQueryItem(name: "access_token", value: token),
+            URLQueryItem(name: "v", value: "5.124")
+        ]
+        return urlComponents
+    }
     
     func getPhotos(for friendId: String, offset: Int, completed: @escaping (Result<PhotosResponse, ErrorMessage>) -> Void) {
         let urlRequest = baseUrl + "/photos.getAll?owner_id=\(friendId)&access_token=\(token)&v=5.131&count=200&offset=\(offset)"
