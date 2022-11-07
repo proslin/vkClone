@@ -21,7 +21,6 @@ struct Friend: Codable {
     var lastName: String
     var friendId: Int
     var friendAvatarURL: String
-    //var friendPhotoAlbum: [String]
     enum CodingKeys: String, CodingKey {
         case firstName = "first_name"
         case lastName = "last_name"

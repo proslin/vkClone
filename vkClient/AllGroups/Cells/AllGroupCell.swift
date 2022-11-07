@@ -16,12 +16,10 @@ class AllGroupCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
         self.selectionStyle = .none
     }
     
@@ -32,7 +30,6 @@ class AllGroupCell: UITableViewCell {
         memberCount.textColor = VKColors.secondLabelColor
         memberCount.text = "\(group.membersCount ?? 0) участников"
         NetworkManager.shared.downloadAvatar(from: group.groupAvatarURL, to: groupAvatar.imageView)
-       // memberCount.text = "\(group.memberCount) участников"
     }
     
     

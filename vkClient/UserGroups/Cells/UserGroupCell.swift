@@ -14,7 +14,6 @@ class UserGroupCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -25,7 +24,6 @@ class UserGroupCell: UITableViewCell {
     func set(group: Group) {
         groupName.text = group.groupName
         groupName.textColor = VKColors.labelColor
-       // groupAvatar.imageView.image = UIImage(named: group.groupAvatarURL)
         NetworkManager.shared.downloadAvatar(from: group.groupAvatarURL, to: groupAvatar.imageView)
     }
     

@@ -53,11 +53,11 @@ class UserGroupsVC: UIViewController {
         }
     }
 
-    @IBAction func addGroupTapped(_ sender: Any) {
-        let allGroupVC = storyboard?.instantiateViewController(withIdentifier: "allGroupsVCKey") as! AllGroupsVC
-       // allGroupVC.delegate = self
-        self.show(allGroupVC, sender: nil)
-    }
+//    @IBAction func addGroupTapped(_ sender: Any) {
+//        let allGroupVC = storyboard?.instantiateViewController(withIdentifier: "allGroupsVCKey") as! AllGroupsVC
+//       // allGroupVC.delegate = self
+//        self.show(allGroupVC, sender: nil)
+//    }
 }
 
 // MARK: - Table view data source
@@ -68,7 +68,7 @@ extension UserGroupsVC: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: UserGroupCell.self)) as! UserGroupCell
-                let group = groups[indexPath.row]
+        let group = groups[indexPath.row]
         cell.set(group: group)
                 return cell
     }
@@ -88,6 +88,7 @@ extension UserGroupsVC: UITableViewDelegate {
     }
 }
 
+// MARK: - SelectedGroupDelegate
 extension UserGroupsVC: SelectedGroupDelegate {
     func selectedGroup(selectedGroup: Group) {
          if !groups.contains(selectedGroup) {

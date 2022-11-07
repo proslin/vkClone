@@ -8,25 +8,19 @@
 import UIKit
 
 class AvatarView: UIView {
-
+    
     var imageView: UIImageView!
-
+    
     private func setupView() {
-
-        
         imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-      //  imageView.frame = CGRect()
         let image = UIImage(named: "cat")
         imageView.image = image
         self.addSubview(imageView)
         
         imageView.layer.cornerRadius = imageView.frame.height/2
-       imageView.clipsToBounds = true
+        imageView.clipsToBounds = true
         
     }
-        
-        
-        
     
     override init(frame: CGRect) {
         super.init(frame: frame)

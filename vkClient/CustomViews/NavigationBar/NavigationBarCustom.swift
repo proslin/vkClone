@@ -50,7 +50,6 @@ class NavigationBarCustom: UIView {
         pageTitle.textColor = VKColors.labelColor
         pageTitle.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         searchBar.searchTextField.textColor = VKColors.labelColor
-        //pageTitle.text = "TestTitle"
     }
     
     public func setLeftButtonAction(action: (() -> ())?) {
@@ -90,7 +89,6 @@ class NavigationBarCustom: UIView {
     
     public func setRighButtonImage(imagename: String) {
         rightButton.setImage(UIImage(systemName: imagename), for: .normal)
-        //button.setImage(UIImage(systemName: "search"), for: .normal)
     }
     public func hideTitle() {
         pageTitle.isHidden = true

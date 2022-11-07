@@ -53,7 +53,7 @@ class AllGroupsVC: UIViewController {
         }
     }
     
-
+    
     private func getGroupsList(groupsIds: String) {
         NetworkManager.shared.getGroupsList(for: groupsIds) { [weak self] result in
             guard let self = self else { return }
@@ -67,7 +67,7 @@ class AllGroupsVC: UIViewController {
             case .failure(let error):
                 print(error.rawValue)
             }
-    }
+        }
     }
     
 }
@@ -105,7 +105,7 @@ extension AllGroupsVC: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print("Ввели запрос - \(searchText)")
         if !searchText.isEmpty{
-        getGroups(searchRequest: searchText)
+            getGroups(searchRequest: searchText)
         } else {
             self.allgroups.removeAll()
             self.tableView.reloadData()
@@ -125,4 +125,3 @@ extension AllGroupsVC: UISearchBarDelegate {
     }
 }
 
-}

@@ -57,8 +57,6 @@ extension LoginVC: WKNavigationDelegate {
     let token = params["access_token"]
         guard token != nil else { return }
         Session.shared.token = token ?? " "
-    print(token)
-        
         let tabBarController = (self.storyboard?.instantiateViewController(withIdentifier: "TabBarControllerKey"))!
         present(tabBarController, animated: true, completion: nil)
     decisionHandler(.cancel) }
