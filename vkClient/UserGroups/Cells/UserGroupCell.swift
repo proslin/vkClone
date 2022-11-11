@@ -24,7 +24,7 @@ class UserGroupCell: UITableViewCell {
     func set(group: Group) {
         groupName.text = group.groupName
         groupName.textColor = VKColors.labelColor
-        NetworkManager.shared.downloadAvatar(from: group.groupAvatarURL, to: groupAvatar.imageView)
+        NetworkService.shared.downloadAvatar(from: group.groupAvatarURL, to: groupAvatar.imageView)
     }
     
 }

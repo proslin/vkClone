@@ -6,9 +6,10 @@
 //
 
 import UIKit
+import RealmSwift
 
-struct NetworkManager {
-    static let shared   = NetworkManager()
+struct NetworkService {
+    static let shared   = NetworkService()
     private let baseUrl = "https://api.vk.com/method"
     let token           = Session.shared.token
     let cache           = NSCache<NSString, UIImage>()
@@ -43,7 +44,7 @@ struct NetworkManager {
                 let friendsResponse = try decoder.decode(FriendsResponse.self, from: data)
                 let friends = friendsResponse.response.items
                 completed(.success(friends))
-                print("################ \(response)")
+                //print("################ \(response)")
             } catch {
                 print(error)
                 completed(.failure(.invalidData))

@@ -23,7 +23,7 @@ class FriendCellXib: UITableViewCell {
     func set(friend: Friend) {
         friendName.text =  "\(friend.firstName) \(friend.lastName)"
         friendName.textColor = VKColors.labelColor
-        NetworkManager.shared.downloadAvatar(from: friend.friendAvatarURL, to: avatarView.imageView)
+        NetworkService.shared.downloadAvatar(from: friend.friendAvatarURL, to: avatarView.imageView)
     }
     
 }

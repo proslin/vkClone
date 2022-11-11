@@ -38,7 +38,7 @@ class AllGroupsVC: UIViewController {
     }
     
     private func getGroups(searchRequest: String) {
-        NetworkManager.shared.getSearchGroups(for: searchRequest) { [weak self] result in
+        NetworkService.shared.getSearchGroups(for: searchRequest) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
@@ -55,7 +55,7 @@ class AllGroupsVC: UIViewController {
     
     
     private func getGroupsList(groupsIds: String) {
-        NetworkManager.shared.getGroupsList(for: groupsIds) { [weak self] result in
+        NetworkService.shared.getGroupsList(for: groupsIds) { [weak self] result in
             guard let self = self else { return }
             
             switch result {

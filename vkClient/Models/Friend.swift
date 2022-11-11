@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 struct FriendsResponse: Codable {
     let response: Response
@@ -16,15 +17,20 @@ struct Response: Codable {
     let items: [Friend]
 }
 
-struct Friend: Codable {
-    var firstName: String
-    var lastName: String
-    var friendId: Int
-    var friendAvatarURL: String
+class Friend: Object, Codable {
+    @objc dynamic var firstName: String = ""
+    @objc dynamic var lastName: String = ""
+    @objc dynamic var friendId: Int = 0
+    @objc dynamic var friendAvatarURL: String = ""
     enum CodingKeys: String, CodingKey {
         case firstName = "first_name"
         case lastName = "last_name"
         case friendId = "id"
         case friendAvatarURL = "photo_100"
     }
+    
+    override static func primaryKey() -> String? {
+        return "friendId"
+    }
+
 }

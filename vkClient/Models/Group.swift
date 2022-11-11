@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 struct GroupsResponse: Codable {
     let response: ResponseGroup
@@ -16,16 +17,24 @@ struct ResponseGroup: Codable {
     let items: [Group]
 }
 
-struct Group: Codable, Equatable {
-    var groupName: String
-    var groupAvatarURL: String
+class Group: Object, Codable {
+    @objc dynamic var groupName: String = ""
+    @objc dynamic var groupAvatarURL: String = ""
     var membersCount: Int?
-    var groupId: Int
+    @objc dynamic var groupId: Int = 0
     enum CodingKeys: String, CodingKey {
         case groupName = "name"
         case groupAvatarURL = "photo_100"
         case membersCount = "members_count"
         case groupId = "id"
+    }
+    
+    override static func primaryKey() -> String? {
+        return "groupId"
+    }
+    
+    override class func ignoredProperties() -> [String] {
+        return ["membersCount"]
     }
 }
 

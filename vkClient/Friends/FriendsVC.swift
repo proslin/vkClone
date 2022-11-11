@@ -6,15 +6,22 @@
 //
 
 import UIKit
+import RealmSwift
 
 class FriendsVC: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var navigationBar: NavigationBarCustom!
-    var friends: [Friend] = []
+    
+    //var friends: [Friend] = []
+    var friends: Results<Friend>?
+    var token: NotificationToken?
+    
+    // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         getFriends()
+        pairTableAndRealm()
         tableView.register(UINib(nibName: String(describing: FriendCellXib.self), bundle: nil), forCellReuseIdentifier: String(describing: FriendCellXib.self))
         self.tableView.dataSource = self
         self.tableView.delegate = self
@@ -27,17 +34,51 @@ class FriendsVC: UIViewController {
 
     
     private func getFriends() {
-        NetworkManager.shared.getFriends() { [weak self] result in
+        showSpinner()
+        
+        NetworkService.shared.getFriends() { [weak self] result in
             guard let self = self else { return }
-            
+            DispatchQueue.main.async {
+                self.removeSpinner()
+            }
             switch result {
                 
             case .success(let friends):
-                self.friends = friends
+                //self.friends = friends
+                //сохранили в базу
+                DispatchQueue.main.async {
+                    RealmService.shared.saveFriends(friends)
+                
+                //self.friends = RealmService.shared.loadDataFriends()
+                }
+                //print(self.friends)
                 DispatchQueue.main.async { self.tableView.reloadData() }
                 
             case .failure(let error):
                 print(error.rawValue)
+            }
+        }
+    }
+    
+    func pairTableAndRealm() {
+        guard let realm = try? Realm() else { return }
+        friends = realm.objects(Friend.self)
+        token = friends?.observe { [weak self] (changes: RealmCollectionChange) in
+            guard let tableView = self?.tableView else { return }
+            switch changes {
+            case .initial:
+                tableView.reloadData()
+            case .update(_, let deletions, let insertions, let modifications):
+                tableView.beginUpdates()
+                
+                tableView.insertRows(at: insertions.map({ IndexPath(row: $0, section: 0) }),
+                                     with: .automatic)
+                tableView.deleteRows(at: deletions.map({ IndexPath(row: $0,   section: 0) }),
+                                     with: .automatic)
+                tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0)}),
+                                     with: .automatic)
+                tableView.endUpdates()
+            case .error(let error): fatalError("\(error)")
             }
         }
     }
@@ -46,14 +87,14 @@ class FriendsVC: UIViewController {
 // MARK: - Table view data source
 extension FriendsVC: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return friends.count
+        return friends?.count ?? 0
     }
     
 func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: FriendCellXib.self)) as! FriendCellXib
-            let friend = friends[indexPath.row]
+    guard let friends = friends else { return cell }
+    let friend = friends[indexPath.row]
             cell.set(friend: friend)
-    
     return cell
 }
 }
@@ -65,6 +106,8 @@ extension FriendsVC: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+       
+        guard let friends = friends else { return }
         let selectedFriend = friends[indexPath.row]
         let vc = storyboard?.instantiateViewController(withIdentifier: "FriendsPhotoVCKey") as! FriendsPhotoVC
         vc.selectedModel = selectedFriend

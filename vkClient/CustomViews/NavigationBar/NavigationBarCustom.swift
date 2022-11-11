@@ -16,6 +16,13 @@ class NavigationBarCustom: UIView {
     @IBOutlet weak var searchBar: UISearchBar!
     
     
+    @IBAction func leftButtonTapped(_ sender: Any) {
+        leftButtonAction?()
+    }
+    @IBAction func rightButtonTapped(_ sender: Any) {
+        rightButtonAction?()
+    }
+    
     var view: UIView!
     var nibName: String = "NavigationBarCustom"
     
@@ -59,13 +66,7 @@ class NavigationBarCustom: UIView {
     public func setRightButtonAction(action: (() -> ())?) {
         rightButtonAction = action
     }
-    
-    @IBAction func leftButtonTapped(_ sender: Any) {
-        leftButtonAction?()
-    }
-    @IBAction func rightButtonTapped(_ sender: Any) {
-        rightButtonAction?()
-    }
+
     
     public func showSearchBar() {
         searchBar.isHidden = false

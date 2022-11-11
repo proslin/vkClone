@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 //private let reuseIdentifier = "Cell"
 
@@ -17,11 +18,15 @@ class FriendsPhotoVC: UIViewController {
     var photosCount: Int = 0
     var selectedModel: Friend?
     var photos: [Photo] = []
-    var photosURL: [String] = []
+   // var photosURL: [PhotoObject] = []
+    var photosURL: Results<PhotoObject>?
+    var token: NotificationToken?
+  //  var ownerId = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         getPhotos(offset: 0)
+        pairTableAndRealm()
         print(photos.count)
         configureCollectionView()
         setNavigationBar()
@@ -45,21 +50,34 @@ class FriendsPhotoVC: UIViewController {
         }
     }
     
-    private func getPhotos(offset: Int) {
+    private func getPhotos(offset: Int, isLoadingMorePhotos: Bool = false) {
+        showSpinner()
+        
         guard let selectedModel = selectedModel else { return }
         let ownerId = selectedModel.friendId
-        NetworkManager.shared.getPhotos(for: String(ownerId), offset: offset) { [weak self] result in
+        NetworkService.shared.getPhotos(for: String(ownerId), offset: offset) { [weak self] result in
             guard let self = self else { return }
-            
+            DispatchQueue.main.async {
+                self.removeSpinner()
+            }
             switch result {
                 
             case .success(let photosResponse):
                 self.photosCount = photosResponse.response.count
                 print("Текущее смещение \(self.offset)")
                 let currentPhotoResponse = photosResponse.response.items
+                //print(currentPhotoResponse)
                 self.photos.append(contentsOf: currentPhotoResponse)
-                let currentUrlPhoto = currentPhotoResponse.compactMap { self.getPhotoUrl(photo: $0) }
-                self.photosURL.append(contentsOf: currentUrlPhoto)
+                
+//                let currentUrlPhoto = currentPhotoResponse.compactMap { self.getPhotoUrl(photo: $0) }
+//                self.photosURL.append(contentsOf: currentUrlPhoto)
+               // print("\(self.photos[0].photoURL) адрес!!!!!!")
+               // print(self.photosURL)
+
+                DispatchQueue.main.async {
+                    RealmService.shared.savePhoto(currentPhotoResponse, ownerId: ownerId, isLoadimgMorePhoto: isLoadingMorePhotos)
+//                    self.photosURL = RealmService.shared.loadDataPhoto(ownerId: ownerId)
+                }
                 DispatchQueue.main.async { self.collectionView.reloadData() }
                 
             case .failure(let error):
@@ -67,6 +85,28 @@ class FriendsPhotoVC: UIViewController {
             }
         }
 }
+    
+    func pairTableAndRealm() {
+        guard let realm = try? Realm(), let owner = realm.object(ofType: Friend.self, forPrimaryKey: selectedModel?.friendId) else { return }
+        //weathers = city.weathers
+        let photos = realm.objects(PhotoObject.self).filter("owner.friendId == %@", owner.friendId)
+        token = photos.observe { [weak self] (changes: RealmCollectionChange) in
+            guard let collectionView = self?.collectionView else { return }
+            switch changes {
+            case .initial:
+                collectionView.reloadData()
+            case .update(_, let deletions, let insertions, let modifications):
+                collectionView.performBatchUpdates({ collectionView.insertItems(at: insertions.map({
+                    IndexPath(row: $0, section: 0) }))
+                    collectionView.deleteItems(at: deletions.map({
+                        IndexPath(row: $0, section: 0)}))
+                    collectionView.reloadItems(at: modifications.map({
+                        IndexPath(row: $0, section: 0) })) }, completion: nil)
+            case .error(let error):
+                fatalError("\(error)") }
+        }
+        
+    }
 
     private func getPhotoUrl(photo: Photo) -> String? {
         photo.sizes.first(where: { $0.type == "m" })?.url
@@ -81,7 +121,7 @@ extension FriendsPhotoVC: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: FriendPhotoCellXib.self), for: indexPath) as! FriendPhotoCellXib
-        NetworkManager.shared.downloadAvatar(from: photosURL[indexPath.row], to: cell.photo)
+        NetworkService.shared.downloadAvatar(from: photos[indexPath.row].photoURL, to: cell.photo)
         return cell
         
     }
@@ -91,9 +131,9 @@ extension FriendsPhotoVC: UICollectionViewDataSource {
 // MARK: UICollectionViewDelegate
 extension FriendsPhotoVC: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if offset < photosCount && indexPath.row == photos.count - 1 {
+        if offset < photosCount  && photosCount > (200 + offset) && indexPath.row == photos.count - 1 {
             offset += 200
-            getPhotos(offset: offset)
+            getPhotos(offset: offset, isLoadingMorePhotos: true)
         }
     }
 }
