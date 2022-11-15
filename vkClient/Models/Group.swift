@@ -12,6 +12,14 @@ struct GroupsResponse: Codable {
     let response: ResponseGroup
 }
 
+struct GroupDeleteAddResponse: Codable {
+    let response: Int
+}
+
+//struct GroupAddResponse: Codable {
+//    let response: Int
+//}
+
 struct ResponseGroup: Codable {
     let count: Int
     let items: [Group]

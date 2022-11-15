@@ -44,7 +44,6 @@ struct NetworkService {
                 let friendsResponse = try decoder.decode(FriendsResponse.self, from: data)
                 let friends = friendsResponse.response.items
                 completed(.success(friends))
-                //print("################ \(response)")
             } catch {
                 print(error)
                 completed(.failure(.invalidData))
@@ -122,6 +121,78 @@ struct NetworkService {
                 let groupsResponse = try decoder.decode(GroupsResponse.self, from: data)
                 let groups = groupsResponse.response.items
                 completed(.success(groups))
+            } catch {
+                print(error)
+                completed(.failure(.invalidData))
+                return
+            }
+        }
+        task.resume()
+    }
+    
+    func deleteGroup(for groupId: Int, completed: @escaping (Result<GroupDeleteAddResponse, ErrorMessage>) -> Void) {
+        let urlRequest = baseUrl + "/groups.leave?group_id=\(groupId)&access_token=\(token)&v=5.124"
+        guard let url = URL(string: urlRequest) else {
+            completed(.failure(.invalidUsername))
+            return
+        }
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            
+            if let _ = error {
+                completed(.failure(.unableToComplete))
+            }
+            
+            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                completed(.failure(.invalidResponse))
+                return
+            }
+            
+            guard let data = data else {
+                completed(.failure(.invalidData))
+                return
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                let groupDeleteResponse = try decoder.decode(GroupDeleteAddResponse.self, from: data)
+                //let groups = groupsResponse.response
+                completed(.success(groupDeleteResponse))
+            } catch {
+                print(error)
+                completed(.failure(.invalidData))
+                return
+            }
+        }
+        
+        task.resume()
+    }
+    
+    func addGroup(for groupId: Int, completed: @escaping (Result<GroupDeleteAddResponse, ErrorMessage>) -> Void) {
+        let urlRequest = baseUrl + "/groups.join?group_id=\(groupId)&access_token=\(token)&v=5.124"
+        guard let url = URL(string: urlRequest) else {
+            completed(.failure(.invalidUsername))
+            return
+        }
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            
+            if let _ = error {
+                completed(.failure(.unableToComplete))
+            }
+            
+            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                completed(.failure(.invalidResponse))
+                return
+            }
+            
+            guard let data = data else {
+                completed(.failure(.invalidData))
+                return
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                let groupAddResponse = try decoder.decode(GroupDeleteAddResponse.self, from: data)
+                completed(.success(groupAddResponse))
             } catch {
                 print(error)
                 completed(.failure(.invalidData))

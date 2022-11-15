@@ -40,9 +40,6 @@ struct RealmService {
 //            let realm = try Realm(configuration: config, queue: DispatchQueue.main)
             let realm = try Realm()
             print(realm.configuration.fileURL as Any)
-            // все старые погодные данные для текущего города
-            // let oldWeathers = realm.objects(Weather.self).filter("city == %@", city)
-            // начинаем изменять хранилище
             realm.beginWrite()
             // удаляем старые данные
             realm.delete(realm.objects(Group.self))
@@ -71,6 +68,56 @@ struct RealmService {
         }
     }
     
+    func deleteGroup(groupId: Int) {
+        do {
+            let realm = try Realm()
+            realm.beginWrite()
+            realm.delete(realm.objects(Group.self).filter("groupId == %@", groupId))
+            try realm.commitWrite()
+        } catch  {
+            print(error)
+        }
+    }
+    
+    func addGroup(group: Group) {
+        do {
+            let realm = try Realm()
+            realm.beginWrite()
+            realm.add(group)
+            try realm.commitWrite()
+        } catch  {
+            print(error)
+        }
+    }
+    
+//    func savePhoto(_ photos: [Photo], ownerId: Int, isLoadimgMorePhoto: Bool = false) {
+//        do {
+////            Realm.Configuration.defaultConfiguration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
+////            let config = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
+////            let realm = try Realm(configuration: config, queue: DispatchQueue.main)
+//            let realm = try Realm()
+//            print(realm.configuration.fileURL as Any)
+//            // все старые погодные данные для текущего города
+//            // let oldWeathers = realm.objects(Weather.self).filter("city == %@", city)
+//            // начинаем изменять хранилище
+//            realm.beginWrite()
+//            // удаляем старые данные если загружаем заново
+//            if !isLoadimgMorePhoto {
+//            realm.delete(realm.objects(PhotoObject.self).filter("owner.friendId == %@", ownerId))
+//            }
+//            //realm.delete(realm.objects(PhotoObject.self))
+//            // ищем владельца фото по ID
+//            let owner = realm.objects(Friend.self).filter("friendId == %@", ownerId).first!
+//            // добавляем в хранилище, предварительно сконвертировав
+//            realm.add(convertToPhotoObject(photos: photos, owner: owner.friendId), update: .all)
+//            // завершаем изменять хранилище
+//            try  realm.commitWrite()
+//        } catch {
+//            // если произошла ошибка, выв
+//            print(error)
+//        }
+//    }
+    
     func savePhoto(_ photos: [Photo], ownerId: Int, isLoadimgMorePhoto: Bool = false) {
         do {
 //            Realm.Configuration.defaultConfiguration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
@@ -78,19 +125,13 @@ struct RealmService {
 //            let realm = try Realm(configuration: config, queue: DispatchQueue.main)
             let realm = try Realm()
             print(realm.configuration.fileURL as Any)
-            // все старые погодные данные для текущего города
-            // let oldWeathers = realm.objects(Weather.self).filter("city == %@", city)
             // начинаем изменять хранилище
             realm.beginWrite()
             // удаляем старые данные если загружаем заново
             if !isLoadimgMorePhoto {
-            realm.delete(realm.objects(PhotoObject.self).filter("owner.friendId == %@", ownerId))
+            realm.delete(realm.objects(Photo.self).filter("ownerId == %@", ownerId))
             }
-            //realm.delete(realm.objects(PhotoObject.self))
-            // ищем владельца фото по ID
-            let owner = realm.objects(Friend.self).filter("friendId == %@", ownerId).first!
-            // добавляем в хранилище, предварительно сконвертировав
-            realm.add(convertToPhotoObject(photos: photos, owner: owner.friendId), update: .all)
+            realm.add(photos, update: .all)
             // завершаем изменять хранилище
             try  realm.commitWrite()
         } catch {
@@ -104,8 +145,6 @@ struct RealmService {
             let realm = try Realm()
             
             let photos = realm.objects(PhotoObject.self).filter("owner.friendId == %@", ownerId)
-            
-            //self.  = Array(weathers)
             return Array(photos)
         } catch {
             // если произошла ошибка, выводим ее в консоль

@@ -12,20 +12,32 @@ class FriendsVC: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var navigationBar: NavigationBarCustom!
+    let refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refresh(sender:)), for: .valueChanged)
+        return refreshControl
+    }()
     
-    //var friends: [Friend] = []
     var friends: Results<Friend>?
     var token: NotificationToken?
     
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        getFriends()
-        pairTableAndRealm()
+        tableView.refreshControl = refreshControl
+        
         tableView.register(UINib(nibName: String(describing: FriendCellXib.self), bundle: nil), forCellReuseIdentifier: String(describing: FriendCellXib.self))
         self.tableView.dataSource = self
         self.tableView.delegate = self
+        
         setNavigationBar()
+        getFriends()
+        pairTableAndRealm()
+    }
+    
+    @objc func refresh(sender: UIRefreshControl) {
+        getFriends()
+        pairTableAndRealm()
     }
     
     private func setNavigationBar() {
@@ -48,11 +60,11 @@ class FriendsVC: UIViewController {
                 //сохранили в базу
                 DispatchQueue.main.async {
                     RealmService.shared.saveFriends(friends)
-                
+                    self.refreshControl.endRefreshing()
                 //self.friends = RealmService.shared.loadDataFriends()
                 }
                 //print(self.friends)
-                DispatchQueue.main.async { self.tableView.reloadData() }
+//                DispatchQueue.main.async { self.tableView.reloadData() }
                 
             case .failure(let error):
                 print(error.rawValue)

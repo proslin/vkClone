@@ -16,13 +16,17 @@ class UserGroupsVC: UIViewController {
 
     @IBOutlet weak var navigationBar: NavigationBarCustom!
     @IBOutlet weak var tableView: UITableView!
-    
-//    var groups: [Group] = []
+    let refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refresh(sender:)), for: .valueChanged)
+        return refreshControl
+    }()
     var groups: Results<Group>?
     var token: NotificationToken?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.refreshControl = refreshControl
         getGroups()
         pairTableAndRealm()
         tableView.register(UINib(nibName: String(describing: UserGroupCell.self), bundle: nil), forCellReuseIdentifier: String(describing: UserGroupCell.self))
@@ -40,20 +44,54 @@ class UserGroupsVC: UIViewController {
             switch result {
                 
             case .success(let groups):
-               // self.groups = groups
-                
-                //сохранили в базe
                     DispatchQueue.main.async {
                     RealmService.shared.saveGroups(groups)
+                        self.refreshControl.endRefreshing()
                     //self.groups = RealmService.shared.loadDataGroups()
                 }
-                DispatchQueue.main.async { self.tableView.reloadData() }
+//            DispatchQueue.main.async { self.tableView.reloadData() }
                 
             case .failure(let error):
                 print(error.rawValue)
             }
         }
     }
+    
+    func deleteGroup(groupId: Int) {
+    NetworkService.shared.deleteGroup(for: groupId) { [weak self] result in
+        guard let self = self else { return }
+        switch result {
+            
+        case .success(let result):
+            if result.response == 1 {
+            print(result)
+            //print(self.friends)
+                DispatchQueue.main.async { RealmService.shared.deleteGroup(groupId: groupId)}
+            }
+        case .failure(let error):
+            print(error.rawValue)
+        }
+    }
+    }
+    
+    func addGroup(group: Group) {
+        NetworkService.shared.addGroup(for: group.groupId) { [weak self] result in
+        guard let self = self else { return }
+        switch result {
+            
+        case .success(let result):
+            if result.response == 1 {
+                DispatchQueue.main.async {
+                    RealmService.shared.addGroup(group: group)
+                    self.refreshControl.endRefreshing()
+                }
+            }
+        case .failure(let error):
+            print(error.rawValue)
+        }
+    }
+    }
+    
     
     func pairTableAndRealm() {
         guard let realm = try? Realm() else { return }
@@ -65,17 +103,18 @@ class UserGroupsVC: UIViewController {
                 tableView.reloadData()
             case .update(_, let deletions, let insertions, let modifications):
                 tableView.beginUpdates()
-                
-                tableView.insertRows(at: insertions.map({ IndexPath(row: $0, section: 0) }),
-                                     with: .automatic)
-                tableView.deleteRows(at: deletions.map({ IndexPath(row: $0,   section: 0) }),
-                                     with: .automatic)
-                tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0)}),
-                                     with: .automatic)
+                tableView.insertRows(at: insertions.map({ IndexPath(row: $0, section: 0) }), with: .automatic)
+                tableView.deleteRows(at: deletions.map({ IndexPath(row: $0,   section: 0) }), with: .automatic)
+                tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0)}), with: .automatic)
                 tableView.endUpdates()
             case .error(let error): fatalError("\(error)")
             }
         }
+    }
+    
+    @objc func refresh(sender: UIRefreshControl) {
+        getGroups()
+        pairTableAndRealm()
     }
     
     private func setNavigationBar() {
@@ -89,11 +128,6 @@ class UserGroupsVC: UIViewController {
         }
     }
 
-//    @IBAction func addGroupTapped(_ sender: Any) {
-//        let allGroupVC = storyboard?.instantiateViewController(withIdentifier: "allGroupsVCKey") as! AllGroupsVC
-//       // allGroupVC.delegate = self
-//        self.show(allGroupVC, sender: nil)
-//    }
 }
 
 // MARK: - Table view data source
@@ -121,14 +155,8 @@ extension UserGroupsVC: UITableViewDelegate {
         guard let groups = groups else { return }
         let group = groups[indexPath.row]
         if editingStyle == .delete {
-            do {
-                let realm = try Realm()
-                realm.beginWrite()
-                realm.delete(group)
-                try realm.commitWrite()
-            } catch  {
-                print(error)
-            }
+            deleteGroup(groupId: group.groupId)
+            pairTableAndRealm()
         }
     }
 }
@@ -136,10 +164,8 @@ extension UserGroupsVC: UITableViewDelegate {
 // MARK: - SelectedGroupDelegate
 extension UserGroupsVC: SelectedGroupDelegate {
     func selectedGroup(selectedGroup: Group) {
-//         if !groups.contains(selectedGroup) {
-//         groups.append(selectedGroup)
-//         tableView.reloadData()
-//        }
+    addGroup(group: selectedGroup)
+        pairTableAndRealm()
     }
     
     

@@ -14,8 +14,8 @@
             filePath = "vkClient/Friends/FriendsVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -30,8 +30,8 @@
             filePath = "vkClient/Friends/FriendsVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -46,8 +46,8 @@
             filePath = "vkClient/UserGroups/UserGroupsVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "29"
-            endingLineNumber = "29"
+            startingLineNumber = "33"
+            endingLineNumber = "33"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
@@ -62,8 +62,8 @@
             filePath = "vkClient/AllGroups/AllGroupsVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "97"
-            endingLineNumber = "97"
+            startingLineNumber = "113"
+            endingLineNumber = "113"
             landmarkName = "tableView(_:didSelectRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -94,8 +94,8 @@
             filePath = "vkClient/AllGroups/AllGroupsVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "82"
-            endingLineNumber = "82"
+            startingLineNumber = "98"
+            endingLineNumber = "98"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -158,8 +158,8 @@
             filePath = "vkClient/FriendsPhoto/FriendsPhotoVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "65"
-            endingLineNumber = "65"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
             landmarkName = "getPhotos(offset:isLoadingMorePhotos:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -174,8 +174,8 @@
             filePath = "vkClient/FriendsPhoto/FriendsPhotoVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "28"
-            endingLineNumber = "28"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
@@ -190,8 +190,8 @@
             filePath = "vkClient/FriendsPhoto/FriendsPhotoVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
+            startingLineNumber = "68"
+            endingLineNumber = "68"
             landmarkName = "getPhotos(offset:isLoadingMorePhotos:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -206,8 +206,8 @@
             filePath = "vkClient/FriendsPhoto/FriendsPhotoVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "59"
-            endingLineNumber = "59"
+            startingLineNumber = "64"
+            endingLineNumber = "64"
             landmarkName = "getPhotos(offset:isLoadingMorePhotos:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -222,8 +222,8 @@
             filePath = "vkClient/FriendsPhoto/FriendsPhotoVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "112"
-            endingLineNumber = "112"
+            startingLineNumber = "113"
+            endingLineNumber = "113"
             landmarkName = "getPhotoUrl(photo:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -232,14 +232,14 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "4F2293F0-2B3E-4627-87E8-3A1407E98D8F"
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "vkClient/FriendsPhoto/FriendsPhotoVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "66"
-            endingLineNumber = "66"
+            startingLineNumber = "71"
+            endingLineNumber = "71"
             landmarkName = "getPhotos(offset:isLoadingMorePhotos:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -254,8 +254,8 @@
             filePath = "vkClient/FriendsPhoto/FriendsPhotoVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "58"
-            endingLineNumber = "58"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
             landmarkName = "getPhotos(offset:isLoadingMorePhotos:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -302,8 +302,8 @@
             filePath = "vkClient/Models/Group.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "28"
-            endingLineNumber = "28"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
             landmarkName = "CodingKeys"
             landmarkType = "13">
             <Locations>

@@ -22,14 +22,24 @@ class Photo: Object, Codable {
     @objc dynamic var id: Int = 0
     @objc dynamic var ownerId: Int = 0
     
-    var sizes: [Sizes]
-    @objc dynamic var photoURL: String {
-        return sizes.first(where: { $0.type == "m" })?.url ?? ""
-    }
+    var sizes: [Sizes] = []
+    @objc dynamic var photoURL: String = ""
+    
+//    {
+//        return sizes.first(where: { $0.type == "m" })?.url ?? ""
+//    }
     enum CodingKeys: String, CodingKey {
         case ownerId = "owner_id"
         case id = "id"
         case sizes = "sizes"
+    }
+    
+    override static func primaryKey() -> String? {
+        return "id"
+    }
+    
+    override class func ignoredProperties() -> [String] {
+        return ["sizes"]
     }
 }
 

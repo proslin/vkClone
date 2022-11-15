@@ -70,6 +70,22 @@ class AllGroupsVC: UIViewController {
         }
     }
     
+    func addGroup(group: Group) {
+        NetworkService.shared.addGroup(for: group.groupId) { [weak self] result in
+        guard let self = self else { return }
+        switch result {
+            
+        case .success(let result):
+            if result.response == 1 {
+            print(result)
+                DispatchQueue.main.async { RealmService.shared.addGroup(group: group)}
+            }
+        case .failure(let error):
+            print(error.rawValue)
+        }
+    }
+    }
+    
 }
 
 // MARK: UITableViewDataSource
@@ -96,6 +112,8 @@ extension AllGroupsVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedGroup = allgroups[indexPath.row]
         delegate?.selectedGroup(selectedGroup: selectedGroup)
+        print(selectedGroup)
+//        addGroup(group: selectedGroup)
         self.navigationController?.popViewController(animated: true)
     }
 }
