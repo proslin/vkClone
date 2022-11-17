@@ -10,6 +10,17 @@ import UIKit
 fileprivate var loadingView: UIView?
 
 extension UIViewController {
+    
+    func presentAlertVC(title: String, message: String) {
+          let alertVC = UIAlertController(
+                title: title,
+                message: message,
+                preferredStyle: .alert)
+            let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertVC.addAction(action)
+            present(alertVC, animated: true, completion: nil)
+    }
+    
     func showSpinner() {
         loadingView = UIView(frame: view.bounds)
         loadingView?.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)

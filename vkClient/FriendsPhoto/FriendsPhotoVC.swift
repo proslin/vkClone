@@ -86,6 +86,9 @@ class FriendsPhotoVC: UIViewController {
                 
             case .failure(let error):
                 print(error.rawValue)
+                DispatchQueue.main.async {
+                self.presentAlertVC(title: "Ошибка", message: error.rawValue)
+                }
             }
         }
     }
@@ -106,7 +109,10 @@ class FriendsPhotoVC: UIViewController {
                     collectionView.reloadItems(at: modifications.map({
                         IndexPath(row: $0, section: 0) })) }, completion: nil)
             case .error(let error):
-                fatalError("\(error)") }
+                DispatchQueue.main.async {
+                    self?.presentAlertVC(title: "Ошибка", message: "\(error)")
+                }
+            }
         }
         
     }

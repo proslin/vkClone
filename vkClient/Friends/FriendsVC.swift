@@ -27,6 +27,7 @@ class FriendsVC: UIViewController {
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureTableView()
         setupNavBar()
         switch userSettings.entryCount {
         case 1:
@@ -81,6 +82,9 @@ class FriendsVC: UIViewController {
                 }
             case .failure(let error):
                 print(error.rawValue)
+                DispatchQueue.main.async {
+                self.presentAlertVC(title: "Ошибка", message: error.rawValue)
+                }
             }
         }
     }
@@ -103,7 +107,10 @@ class FriendsVC: UIViewController {
                 tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0)}),
                                      with: .automatic)
                 tableView.endUpdates()
-            case .error(let error): fatalError("\(error)")
+            case .error(let error):
+                DispatchQueue.main.async {
+                    self?.presentAlertVC(title: "Ошибка", message: "\(error)")
+                }
             }
         }
     }

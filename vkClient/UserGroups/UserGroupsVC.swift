@@ -76,6 +76,9 @@ class UserGroupsVC: UIViewController {
                     self.tableView.reloadData()
                 }
             case .failure(let error):
+                DispatchQueue.main.async {
+                self.presentAlertVC(title: "Ошибка", message: error.rawValue)
+                }
                 print(error.rawValue)
             }
         }
@@ -90,6 +93,9 @@ class UserGroupsVC: UIViewController {
                     DispatchQueue.main.async { RealmService.shared.deleteGroup(groupId: groupId)}
                 }
             case .failure(let error):
+                DispatchQueue.main.async {
+                self.presentAlertVC(title: "Ошибка", message: error.rawValue)
+                }
                 print(error.rawValue)
             }
         }
@@ -101,6 +107,7 @@ class UserGroupsVC: UIViewController {
             switch result {
                 
             case .success(let result):
+                print(result.response)
                 if result.response == 1 {
                     DispatchQueue.main.async {
                         RealmService.shared.addGroup(group: group)
@@ -109,6 +116,9 @@ class UserGroupsVC: UIViewController {
                     }
                 }
             case .failure(let error):
+                DispatchQueue.main.async {
+                self.presentAlertVC(title: "Пользователь не добавлен", message: error.rawValue)
+                }
                 print(error.rawValue)
             }
         }
@@ -128,7 +138,10 @@ class UserGroupsVC: UIViewController {
                 tableView.deleteRows(at: deletions.map({ IndexPath(row: $0,   section: 0) }), with: .automatic)
                 tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0)}), with: .automatic)
                 tableView.endUpdates()
-            case .error(let error): fatalError("\(error)")
+            case .error(let error):
+                DispatchQueue.main.async {
+                    self?.presentAlertVC(title: "Ошибка", message: "\(error)")
+                }
             }
         }
     }

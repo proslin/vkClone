@@ -31,15 +31,15 @@ class LoginVC: UIViewController {
         URLQueryItem(name: "response_type", value: "token"),
         URLQueryItem(name: "v", value: "5.68") ]
         let request = URLRequest(url: urlComponents.url!)
-    
         webView.load(request)
+
     }
 }
 
 // MARK: WKNavigationDelegate
 extension LoginVC: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse:
-    WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+                 WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
     guard let url = navigationResponse.response.url, url.path == "/blank.html", let fragment = url.fragment else {
     decisionHandler(.allow)
     return
@@ -58,5 +58,11 @@ extension LoginVC: WKNavigationDelegate {
         Session.shared.token = token ?? " "
         let tabBarController = (self.storyboard?.instantiateViewController(withIdentifier: "TabBarControllerKey"))!
         present(tabBarController, animated: true, completion: nil)
-    decisionHandler(.cancel) }
+    decisionHandler(.cancel)
+        
+    }
+    
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        self.presentAlertVC(title: "Ошибка", message: error.localizedDescription)
+    }
 }

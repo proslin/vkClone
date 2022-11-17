@@ -155,7 +155,6 @@ struct NetworkService {
             do {
                 let decoder = JSONDecoder()
                 let groupDeleteResponse = try decoder.decode(GroupDeleteAddResponse.self, from: data)
-                //let groups = groupsResponse.response
                 completed(.success(groupDeleteResponse))
             } catch {
                 print(error)

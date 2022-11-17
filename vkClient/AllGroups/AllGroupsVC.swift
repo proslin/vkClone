@@ -43,13 +43,14 @@ class AllGroupsVC: UIViewController {
             guard let self = self else { return }
             
             switch result {
-                
             case .success(let groups):
                 var ids = groups.reduce("") { $0 + String($1.groupId) + "," }
                 ids.removeLast(1)
                 self.getGroupsList(groupsIds: ids)
             case .failure(let error):
-                print(error.rawValue)
+                DispatchQueue.main.async {
+                self.presentAlertVC(title: "Ошибка", message: error.rawValue)
+                }
             }
         }
     }
@@ -66,22 +67,13 @@ class AllGroupsVC: UIViewController {
                 
             case .failure(let error):
                 print(error.rawValue)
+                DispatchQueue.main.async {
+                self.presentAlertVC(title: "Ошибка", message: error.rawValue)
+                }
             }
         }
     }
-//    
-//    func addGroup(group: Group) {
-//        NetworkService.shared.addGroup(for: group.groupId) { result in
-//            switch result {
-//            case .success(let result):
-//                if result.response == 1 {
-//                    DispatchQueue.main.async { RealmService.shared.addGroup(group: group)}
-//                }
-//            case .failure(let error):
-//                print(error.rawValue)
-//            }
-//        }
-//    }
+
 }
 
 // MARK: UITableViewDataSource
@@ -108,6 +100,7 @@ extension AllGroupsVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedGroup = allgroups[indexPath.row]
         delegate?.selectedGroup(selectedGroup: selectedGroup)
+        print(selectedGroup.groupId)
         self.navigationController?.popViewController(animated: true)
     }
 }
