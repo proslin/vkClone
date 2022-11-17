@@ -19,10 +19,13 @@ struct ResponsePhoto: Codable {
 }
 
 class Photo: Object, Codable {
+    ///Id фото
     @objc dynamic var id: Int = 0
+    ///Id владельца фото
     @objc dynamic var ownerId: Int = 0
     
     var sizes: [Sizes] = []
+    /// URL фото
     @objc dynamic var photoURL: String = ""
     
     enum CodingKeys: String, CodingKey {
@@ -50,22 +53,4 @@ enum PhotoSize: String {
     case medium = "m"
     case large = "l"
 }
-
-//class PhotoObject: Object {
-//    @objc dynamic var id: Int = 0
-//    @objc dynamic var ownerId: Int = 0
-//    @objc dynamic var photoURL: String = ""
-//    //@objc dynamic var owner: Friend?
-//    
-//    override static func primaryKey() -> String? {
-//        return "id"
-//    }
-//    
-//   convenience init(photoId: Int, photoURL: String, owner: Int) {
-//       self.init()
-//       self.id = photoId
-//       self.photoURL = photoURL
-//       self.ownerId = owner
-//    }
-//}
 

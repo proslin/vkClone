@@ -22,9 +22,13 @@ struct ResponseGroup: Codable {
 }
 
 class Group: Object, Codable {
+    ///название группы
     @objc dynamic var groupName: String = ""
+    ///URLаватара
     @objc dynamic var groupAvatarURL: String = ""
+    ///количество участников
     var membersCount: Int?
+    ///Id группы
     @objc dynamic var groupId: Int = 0
     enum CodingKeys: String, CodingKey {
         case groupName = "name"

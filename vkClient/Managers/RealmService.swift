@@ -13,10 +13,9 @@ struct RealmService {
     
     private init() {}
     
-    func saveFriends(_ friends: [Friend]) {
+    public func saveFriends(_ friends: [Friend]) {
         do {
             let realm = try Realm()
-            print(realm.configuration.fileURL as Any)
             realm.beginWrite()
             realm.delete(realm.objects(Friend.self))
             realm.add(friends, update: .all)
@@ -26,12 +25,9 @@ struct RealmService {
         }
     }
     
-    func saveGroups(_ groups: [Group]) {
+    public func saveGroups(_ groups: [Group]) {
         do {
-//            let config = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
-//            let realm = try Realm(configuration: config, queue: DispatchQueue.main)
             let realm = try Realm()
-            print(realm.configuration.fileURL as Any)
             realm.beginWrite()
             realm.delete(realm.objects(Group.self))
             realm.add(groups, update: .all)
@@ -41,7 +37,7 @@ struct RealmService {
         }
     }
     
-    func loadDataGroups() -> [Group] {
+    public func loadDataGroups() -> [Group] {
         do {
             let realm = try Realm()
             let groups = realm.objects(Group.self)
@@ -52,7 +48,7 @@ struct RealmService {
         }
     }
     
-    func deleteGroup(groupId: Int) {
+    public func deleteGroup(groupId: Int) {
         do {
             let realm = try Realm()
             realm.beginWrite()
@@ -63,7 +59,7 @@ struct RealmService {
         }
     }
     
-    func addGroup(group: Group) {
+    public func addGroup(group: Group) {
         do {
             let realm = try Realm()
             realm.beginWrite()
@@ -74,11 +70,8 @@ struct RealmService {
         }
     }
 
-    func savePhoto(_ photos: [Photo], ownerId: Int, isLoadimgMorePhoto: Bool = false) {
+    public func savePhoto(_ photos: [Photo], ownerId: Int, isLoadimgMorePhoto: Bool = false) {
         do {
-//            Realm.Configuration.defaultConfiguration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
-//            let config = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
-//            let realm = try Realm(configuration: config, queue: DispatchQueue.main)
             let realm = try Realm()
             print(realm.configuration.fileURL as Any)
             realm.beginWrite()

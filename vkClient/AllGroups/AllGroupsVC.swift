@@ -27,8 +27,6 @@ class AllGroupsVC: UIViewController {
         tableView.register(UINib(nibName: String(describing: AllGroupCell.self), bundle: nil), forCellReuseIdentifier: String(describing: AllGroupCell.self))
         tableView.dataSource = self
         tableView.delegate = self
-//        tableView.rowHeight = UITableView.automaticDimension
-//        tableView.estimatedRowHeight = 80
     }
     
     private func setupNavBar() {
@@ -71,19 +69,19 @@ class AllGroupsVC: UIViewController {
             }
         }
     }
-    
-    func addGroup(group: Group) {
-        NetworkService.shared.addGroup(for: group.groupId) { result in
-            switch result {
-            case .success(let result):
-                if result.response == 1 {
-                    DispatchQueue.main.async { RealmService.shared.addGroup(group: group)}
-                }
-            case .failure(let error):
-                print(error.rawValue)
-            }
-        }
-    }
+//    
+//    func addGroup(group: Group) {
+//        NetworkService.shared.addGroup(for: group.groupId) { result in
+//            switch result {
+//            case .success(let result):
+//                if result.response == 1 {
+//                    DispatchQueue.main.async { RealmService.shared.addGroup(group: group)}
+//                }
+//            case .failure(let error):
+//                print(error.rawValue)
+//            }
+//        }
+//    }
 }
 
 // MARK: UITableViewDataSource

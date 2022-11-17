@@ -18,9 +18,13 @@ struct Response: Codable {
 }
 
 class Friend: Object, Codable {
+    ///имя друга
     @objc dynamic var firstName: String = ""
+    ///фамилия друга
     @objc dynamic var lastName: String = ""
+    ///Id друга
     @objc dynamic var friendId: Int = 0
+    ///URL аватара
     @objc dynamic var friendAvatarURL: String = ""
     enum CodingKeys: String, CodingKey {
         case firstName = "first_name"
