@@ -9,41 +9,59 @@ import UIKit
 import RealmSwift
 
 class FriendsVC: UIViewController {
-
+    
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var navigationBar: NavigationBarCustom!
+    @IBOutlet weak var navBarContainer: UIView!
+    
     let refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refresh(sender:)), for: .valueChanged)
         return refreshControl
     }()
-    
+    var navBar: UIView!
     var friends: Results<Friend>?
     var token: NotificationToken?
+    var entryCount: Int = 1
+    let userSettings = UserSettings()
     
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.refreshControl = refreshControl
-        
-        tableView.register(UINib(nibName: String(describing: FriendCellXib.self), bundle: nil), forCellReuseIdentifier: String(describing: FriendCellXib.self))
-        self.tableView.dataSource = self
-        self.tableView.delegate = self
-        
-        setNavigationBar()
-        getFriends()
-        pairTableAndRealm()
+        setupNavBar()
+        switch userSettings.entryCount {
+        case 1:
+            getFriends()
+            userSettings.entryCount += 1
+            userSettings.saveSettings()
+        case 2..<5:
+            pairTableAndRealm()
+            userSettings.entryCount += 1
+            userSettings.saveSettings()
+        case 5:
+            getFriends()
+            userSettings.entryCount = 1
+            userSettings.saveSettings()
+        default:
+            getFriends()
+        }
     }
     
     @objc func refresh(sender: UIRefreshControl) {
         getFriends()
-        pairTableAndRealm()
     }
     
-    private func setNavigationBar() {
-        navigationBar.setTitle(title: "Друзья")
+    // MARK: - Private methods
+    private func configureTableView() {
+        self.tableView.refreshControl = refreshControl
+        self.tableView.register(UINib(nibName: String(describing: FriendCellXib.self), bundle: nil), forCellReuseIdentifier: String(describing: FriendCellXib.self))
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
     }
-
+    
+    private func setupNavBar() {
+        let navBarModel = NavigationBarModel(title: "Друзья")
+        let _ = NavigationBarCustom.instanceFromNib(model: navBarModel, parentView: navBarContainer)
+    }
     
     private func getFriends() {
         showSpinner()
@@ -54,25 +72,20 @@ class FriendsVC: UIViewController {
                 self.removeSpinner()
             }
             switch result {
-                
             case .success(let friends):
-                //self.friends = friends
-                //сохранили в базу
                 DispatchQueue.main.async {
                     RealmService.shared.saveFriends(friends)
                     self.refreshControl.endRefreshing()
-                //self.friends = RealmService.shared.loadDataFriends()
+                    self.pairTableAndRealm()
+                    self.tableView.reloadData()
                 }
-                //print(self.friends)
-//                DispatchQueue.main.async { self.tableView.reloadData() }
-                
             case .failure(let error):
                 print(error.rawValue)
             }
         }
     }
     
-    func pairTableAndRealm() {
+    private func pairTableAndRealm() {
         guard let realm = try? Realm() else { return }
         friends = realm.objects(Friend.self)
         token = friends?.observe { [weak self] (changes: RealmCollectionChange) in
@@ -102,23 +115,22 @@ extension FriendsVC: UITableViewDataSource{
         return friends?.count ?? 0
     }
     
-func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: FriendCellXib.self)) as! FriendCellXib
-    guard let friends = friends else { return cell }
-    let friend = friends[indexPath.row]
-            cell.set(friend: friend)
-    return cell
-}
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: FriendCellXib.self)) as! FriendCellXib
+        guard let friends = friends else { return cell }
+        let friend = friends[indexPath.row]
+        cell.set(friend: friend)
+        return cell
+    }
 }
 
 // MARK: - Table view delegate
 extension FriendsVC: UITableViewDelegate {
-   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         80
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       
         guard let friends = friends else { return }
         let selectedFriend = friends[indexPath.row]
         let vc = storyboard?.instantiateViewController(withIdentifier: "FriendsPhotoVCKey") as! FriendsPhotoVC

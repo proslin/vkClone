@@ -10,49 +10,51 @@ import RealmSwift
 
 class FriendsPhotoVC: UIViewController {
     
-    @IBOutlet weak var navigationBar: NavigationBarCustom!
+   
+    @IBOutlet weak var navigationBarContainer: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
     let refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refresh(sender:)), for: .valueChanged)
         return refreshControl
     }()
+    
     var offset = 0
     var photosCount: Int = 0
     var selectedModel: Friend?
     var photos: Results<Photo>?
     var token: NotificationToken?
     
+    // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.refreshControl = refreshControl
         getPhotos(offset: 0)
         pairTableAndRealm()
         configureCollectionView()
-        setNavigationBar()
+        setupNavBar()
         
     }
     
-    func configureCollectionView() {
+    // MARK: - Private methods
+    private func configureCollectionView() {
         self.collectionView.register(UINib(nibName: String(describing: FriendPhotoCellXib.self), bundle: nil), forCellWithReuseIdentifier: String(describing: FriendPhotoCellXib.self))
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
-        collectionView.delegate = self
-        collectionView.backgroundColor = .systemBackground
-        collectionView.collectionViewLayout = UIHelper.createThreeColumnFlowLayout(in: view)
+        self.collectionView.backgroundColor = .systemBackground
+        self.collectionView.collectionViewLayout = UIHelper.createThreeColumnFlowLayout(in: view)
     }
     
     @objc func refresh(sender: UIRefreshControl) {
         getPhotos(offset: 0)
-        pairTableAndRealm()
     }
     
-    private func setNavigationBar() {
-        navigationBar.setTitle(title: "Фотографии")
-        navigationBar.showLeftButton()
-        navigationBar.setLeftButtonAction {
-            self.navigationController?.popViewController(animated: true)
-        }
+    private func setupNavBar() {
+        let navBarButtonModel = NavBarButton(image: SFSymbols.shevron, action: { [weak self] in
+            self?.navigationController?.popViewController(animated: true)
+        })
+        let navBarModel = NavigationBarModel(title: "Фотографии пользователя", leftButton: navBarButtonModel)
+        let _ = NavigationBarCustom.instanceFromNib(model: navBarModel, parentView: navigationBarContainer)
     }
     
     private func getPhotos(offset: Int, isLoadingMorePhotos: Bool = false) {
@@ -69,26 +71,26 @@ class FriendsPhotoVC: UIViewController {
                 
             case .success(let photosResponse):
                 self.photosCount = photosResponse.response.count
-                print("Текущее смещение \(self.offset)")
                 let currentPhotoResponse = photosResponse.response.items
-                var currentResponseWithURL = currentPhotoResponse
+                let currentResponseWithURL = currentPhotoResponse
                 for photo in currentResponseWithURL {
                     photo.photoURL = photo.sizes.first(where: { $0.type == "m" })?.url ?? ""
                 }
-
+                
                 DispatchQueue.main.async {
                     RealmService.shared.savePhoto(currentResponseWithURL, ownerId: ownerId, isLoadimgMorePhoto: isLoadingMorePhotos)
                     self.refreshControl.endRefreshing()
+                    self.pairTableAndRealm()
+                    self.collectionView.reloadData()
                 }
-                DispatchQueue.main.async { self.collectionView.reloadData() }
                 
             case .failure(let error):
                 print(error.rawValue)
             }
         }
-}
+    }
     
-    func pairTableAndRealm() {
+    private func pairTableAndRealm() {
         guard let realm = try? Realm(), let owner = realm.object(ofType: Friend.self, forPrimaryKey: selectedModel?.friendId) else { return }
         photos = realm.objects(Photo.self).filter("ownerId == %@", owner.friendId)
         token = photos?.observe { [weak self] (changes: RealmCollectionChange) in

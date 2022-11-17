@@ -161,15 +161,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tF0-w2-jmZ" customClass="NavigationBarCustom" customModule="vkClient" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tF0-w2-jmZ">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="88" id="n0v-l6-LW6"/>
+                                    <constraint firstAttribute="height" constant="44" id="n0v-l6-LW6"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="D28-AN-NC0">
-                                <rect key="frame" x="0.0" y="88" width="414" height="754"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="798"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
                         </subviews>
@@ -182,7 +182,7 @@
                             <constraint firstItem="D28-AN-NC0" firstAttribute="top" secondItem="tF0-w2-jmZ" secondAttribute="bottom" id="bvf-kY-e1c"/>
                             <constraint firstAttribute="bottom" secondItem="D28-AN-NC0" secondAttribute="bottom" id="flA-mU-Jbe"/>
                             <constraint firstItem="81T-uv-D5w" firstAttribute="trailing" secondItem="tF0-w2-jmZ" secondAttribute="trailing" id="jOz-ct-V6h"/>
-                            <constraint firstItem="tF0-w2-jmZ" firstAttribute="top" secondItem="67C-3p-IPX" secondAttribute="top" id="zFQ-ko-HG6"/>
+                            <constraint firstItem="tF0-w2-jmZ" firstAttribute="top" secondItem="81T-uv-D5w" secondAttribute="top" id="zFQ-ko-HG6"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Группы пользователя" id="HWo-Pl-2gG">
@@ -193,7 +193,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="navigationBar" destination="tF0-w2-jmZ" id="HhD-yS-8iL"/>
+                        <outlet property="navigationBarContainer" destination="tF0-w2-jmZ" id="2Yx-2f-40t"/>
                         <outlet property="tableView" destination="D28-AN-NC0" id="Br3-Pl-5J2"/>
                     </connections>
                 </viewController>
@@ -209,32 +209,33 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jiN-oX-V0y" customClass="NavigationBarCustom" customModule="vkClient" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="88" id="IU0-UK-ysE"/>
-                                </constraints>
-                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="3F6-pH-wB4">
                                 <rect key="frame" x="0.0" y="88" width="414" height="808"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
+                            <view contentMode="scaleToFill" id="jiN-oX-V0y">
+                                <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="IU0-UK-ysE"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ayg-KJ-TSr"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="3F6-pH-wB4" firstAttribute="top" secondItem="jiN-oX-V0y" secondAttribute="bottom" id="3CE-83-jzL"/>
                             <constraint firstAttribute="bottom" secondItem="3F6-pH-wB4" secondAttribute="bottom" id="BM8-To-Uht"/>
                             <constraint firstItem="3F6-pH-wB4" firstAttribute="leading" secondItem="ayg-KJ-TSr" secondAttribute="leading" id="Ikd-XF-HIV"/>
                             <constraint firstItem="3F6-pH-wB4" firstAttribute="trailing" secondItem="ayg-KJ-TSr" secondAttribute="trailing" id="Roe-f3-fZZ"/>
-                            <constraint firstItem="jiN-oX-V0y" firstAttribute="top" secondItem="7iX-NN-g53" secondAttribute="top" id="csP-dn-JUn"/>
+                            <constraint firstItem="3F6-pH-wB4" firstAttribute="top" secondItem="jiN-oX-V0y" secondAttribute="bottom" id="YBT-aH-trI"/>
+                            <constraint firstItem="jiN-oX-V0y" firstAttribute="top" secondItem="ayg-KJ-TSr" secondAttribute="top" id="csP-dn-JUn"/>
                             <constraint firstItem="jiN-oX-V0y" firstAttribute="trailing" secondItem="ayg-KJ-TSr" secondAttribute="trailing" id="loW-Jj-Uo5"/>
                             <constraint firstItem="jiN-oX-V0y" firstAttribute="leading" secondItem="ayg-KJ-TSr" secondAttribute="leading" id="sIw-s8-ctI"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="navigationBar" destination="jiN-oX-V0y" id="7cl-AV-AcF"/>
+                        <outlet property="navBarContainer" destination="jiN-oX-V0y" id="519-4b-X2S"/>
                         <outlet property="tableView" destination="3F6-pH-wB4" id="MI7-TF-0ZI"/>
                     </connections>
                 </viewController>
@@ -270,11 +271,11 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jAb-Vk-rdj" customClass="NavigationBarCustom" customModule="vkClient" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jAb-Vk-rdj">
+                                <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="88" id="L1Y-Lw-MGT"/>
+                                    <constraint firstAttribute="height" constant="44" id="L1Y-Lw-MGT"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -282,7 +283,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="r67-uy-5Jy" firstAttribute="leading" secondItem="h0J-3n-7NF" secondAttribute="leading" id="KtS-F8-AnR"/>
-                            <constraint firstItem="jAb-Vk-rdj" firstAttribute="top" secondItem="x28-AI-Ok4" secondAttribute="top" id="V9B-fY-cp5"/>
+                            <constraint firstItem="jAb-Vk-rdj" firstAttribute="top" secondItem="h0J-3n-7NF" secondAttribute="top" id="V9B-fY-cp5"/>
                             <constraint firstItem="jAb-Vk-rdj" firstAttribute="leading" secondItem="h0J-3n-7NF" secondAttribute="leading" id="X4q-CW-jng"/>
                             <constraint firstItem="r67-uy-5Jy" firstAttribute="top" secondItem="jAb-Vk-rdj" secondAttribute="bottom" id="YBl-lP-X9D"/>
                             <constraint firstItem="jAb-Vk-rdj" firstAttribute="trailing" secondItem="h0J-3n-7NF" secondAttribute="trailing" id="aCc-gK-ydl"/>
@@ -292,7 +293,7 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="r67-uy-5Jy" id="h7H-b7-nTd"/>
-                        <outlet property="navigationBar" destination="jAb-Vk-rdj" id="jab-Gv-piP"/>
+                        <outlet property="navigationBarContainer" destination="jAb-Vk-rdj" id="Np8-43-2GB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vgS-2q-FOE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -365,14 +366,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="yGa-qG-0UQ">
-                                <rect key="frame" x="0.0" y="88" width="414" height="725"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="769"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hRY-pu-Ny7" customClass="NavigationBarCustom" customModule="vkClient" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hRY-pu-Ny7">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="88" id="Je9-QR-viB"/>
+                                    <constraint firstAttribute="height" constant="44" id="Je9-QR-viB"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -381,7 +382,7 @@
                         <constraints>
                             <constraint firstItem="yGa-qG-0UQ" firstAttribute="top" secondItem="hRY-pu-Ny7" secondAttribute="bottom" id="8my-ra-Fba"/>
                             <constraint firstItem="hRY-pu-Ny7" firstAttribute="trailing" secondItem="ZeB-gP-P8C" secondAttribute="trailing" id="BQz-gg-AAb"/>
-                            <constraint firstItem="hRY-pu-Ny7" firstAttribute="top" secondItem="sdj-sX-fAP" secondAttribute="top" id="IOX-22-Pdy"/>
+                            <constraint firstItem="hRY-pu-Ny7" firstAttribute="top" secondItem="ZeB-gP-P8C" secondAttribute="top" id="IOX-22-Pdy"/>
                             <constraint firstItem="ZeB-gP-P8C" firstAttribute="bottom" secondItem="yGa-qG-0UQ" secondAttribute="bottom" id="Mbb-nx-kKB"/>
                             <constraint firstItem="hRY-pu-Ny7" firstAttribute="leading" secondItem="ZeB-gP-P8C" secondAttribute="leading" id="cGy-D8-k4Q"/>
                             <constraint firstItem="ZeB-gP-P8C" firstAttribute="trailing" secondItem="yGa-qG-0UQ" secondAttribute="trailing" id="jC7-gQ-Qxo"/>
@@ -390,7 +391,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="jbF-Zq-oNz"/>
                     <connections>
-                        <outlet property="navigationBar" destination="hRY-pu-Ny7" id="vPH-ev-Xat"/>
+                        <outlet property="navBarContainer" destination="hRY-pu-Ny7" id="i47-Io-hxI"/>
                         <outlet property="tableView" destination="yGa-qG-0UQ" id="2cA-DP-IbQ"/>
                     </connections>
                 </viewController>

@@ -13,25 +13,50 @@ protocol SelectedGroupDelegate: AnyObject {
 }
 
 class UserGroupsVC: UIViewController {
-
-    @IBOutlet weak var navigationBar: NavigationBarCustom!
+    
+    @IBOutlet weak var navigationBarContainer: UIView!
     @IBOutlet weak var tableView: UITableView!
     let refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refresh(sender:)), for: .valueChanged)
         return refreshControl
     }()
+    
     var groups: Results<Group>?
     var token: NotificationToken?
+    var userSettings = UserSettings()
     
+    // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.refreshControl = refreshControl
-        getGroups()
-        pairTableAndRealm()
+        configureTableView()
+        setupNavBar()
+        switch userSettings.entryCount - 1 {
+        case 1:
+            getGroups()
+        case 2..<5:
+            pairTableAndRealm()
+        case 5:
+            getGroups()
+        default:
+            getGroups()
+        }
+    }
+    
+    // MARK: - Private methods
+    private func configureTableView() {
         tableView.register(UINib(nibName: String(describing: UserGroupCell.self), bundle: nil), forCellReuseIdentifier: String(describing: UserGroupCell.self))
         self.tableView.dataSource = self
-        setNavigationBar()
+    }
+    
+    private func setupNavBar() {
+        let navBarButtonModel = NavBarButton(image: SFSymbols.plus, action: { [weak self] in
+            let allGroupVC =  self?.storyboard?.instantiateViewController(withIdentifier: "allGroupsVCKey") as! AllGroupsVC
+            allGroupVC.delegate = self
+            self?.show(allGroupVC, sender: nil)
+        })
+        let navBarModel = NavigationBarModel(title: "Группы", rightButton: navBarButtonModel)
+        let _ = NavigationBarCustom.instanceFromNib(model: navBarModel, parentView: navigationBarContainer)
     }
     
     private func getGroups() {
@@ -44,13 +69,12 @@ class UserGroupsVC: UIViewController {
             switch result {
                 
             case .success(let groups):
-                    DispatchQueue.main.async {
+                DispatchQueue.main.async {
                     RealmService.shared.saveGroups(groups)
-                        self.refreshControl.endRefreshing()
-                    //self.groups = RealmService.shared.loadDataGroups()
+                    self.refreshControl.endRefreshing()
+                    self.pairTableAndRealm()
+                    self.tableView.reloadData()
                 }
-//            DispatchQueue.main.async { self.tableView.reloadData() }
-                
             case .failure(let error):
                 print(error.rawValue)
             }
@@ -58,40 +82,37 @@ class UserGroupsVC: UIViewController {
     }
     
     func deleteGroup(groupId: Int) {
-    NetworkService.shared.deleteGroup(for: groupId) { [weak self] result in
-        guard let self = self else { return }
-        switch result {
-            
-        case .success(let result):
-            if result.response == 1 {
-            print(result)
-            //print(self.friends)
-                DispatchQueue.main.async { RealmService.shared.deleteGroup(groupId: groupId)}
+        NetworkService.shared.deleteGroup(for: groupId) { result in
+            switch result {
+                
+            case .success(let result):
+                if result.response == 1 {
+                    DispatchQueue.main.async { RealmService.shared.deleteGroup(groupId: groupId)}
+                }
+            case .failure(let error):
+                print(error.rawValue)
             }
-        case .failure(let error):
-            print(error.rawValue)
         }
-    }
     }
     
     func addGroup(group: Group) {
         NetworkService.shared.addGroup(for: group.groupId) { [weak self] result in
-        guard let self = self else { return }
-        switch result {
-            
-        case .success(let result):
-            if result.response == 1 {
-                DispatchQueue.main.async {
-                    RealmService.shared.addGroup(group: group)
-                    self.refreshControl.endRefreshing()
+            guard let self = self else { return }
+            switch result {
+                
+            case .success(let result):
+                if result.response == 1 {
+                    DispatchQueue.main.async {
+                        RealmService.shared.addGroup(group: group)
+                        self.refreshControl.endRefreshing()
+                        self.pairTableAndRealm()
+                    }
                 }
+            case .failure(let error):
+                print(error.rawValue)
             }
-        case .failure(let error):
-            print(error.rawValue)
         }
     }
-    }
-    
     
     func pairTableAndRealm() {
         guard let realm = try? Realm() else { return }
@@ -116,18 +137,6 @@ class UserGroupsVC: UIViewController {
         getGroups()
         pairTableAndRealm()
     }
-    
-    private func setNavigationBar() {
-        navigationBar.setTitle(title: "Группы пользователя")
-        navigationBar.showRightButton()
-        navigationBar.setRighButtonImage(imagename: "plus")
-        navigationBar.setRightButtonAction {
-            let allGroupVC = self.storyboard?.instantiateViewController(withIdentifier: "allGroupsVCKey") as! AllGroupsVC
-           allGroupVC.delegate = self
-            self.show(allGroupVC, sender: nil)
-        }
-    }
-
 }
 
 // MARK: - Table view data source
@@ -141,7 +150,7 @@ extension UserGroupsVC: UITableViewDataSource {
         guard let groups = groups else { return cell }
         let group = groups[indexPath.row]
         cell.set(group: group)
-                return cell
+        return cell
     }
 }
 
@@ -164,9 +173,7 @@ extension UserGroupsVC: UITableViewDelegate {
 // MARK: - SelectedGroupDelegate
 extension UserGroupsVC: SelectedGroupDelegate {
     func selectedGroup(selectedGroup: Group) {
-    addGroup(group: selectedGroup)
+        addGroup(group: selectedGroup)
         pairTableAndRealm()
     }
-    
-    
 }

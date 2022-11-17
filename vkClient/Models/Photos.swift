@@ -25,9 +25,6 @@ class Photo: Object, Codable {
     var sizes: [Sizes] = []
     @objc dynamic var photoURL: String = ""
     
-//    {
-//        return sizes.first(where: { $0.type == "m" })?.url ?? ""
-//    }
     enum CodingKeys: String, CodingKey {
         case ownerId = "owner_id"
         case id = "id"
@@ -54,21 +51,21 @@ enum PhotoSize: String {
     case large = "l"
 }
 
-class PhotoObject: Object {
-    @objc dynamic var id: Int = 0
-    @objc dynamic var ownerId: Int = 0
-    @objc dynamic var photoURL: String = ""
-    //@objc dynamic var owner: Friend?
-    
-    override static func primaryKey() -> String? {
-        return "id"
-    }
-    
-   convenience init(photoId: Int, photoURL: String, owner: Int) {
-       self.init()
-       self.id = photoId
-       self.photoURL = photoURL
-       self.ownerId = owner
-    }
-}
+//class PhotoObject: Object {
+//    @objc dynamic var id: Int = 0
+//    @objc dynamic var ownerId: Int = 0
+//    @objc dynamic var photoURL: String = ""
+//    //@objc dynamic var owner: Friend?
+//    
+//    override static func primaryKey() -> String? {
+//        return "id"
+//    }
+//    
+//   convenience init(photoId: Int, photoURL: String, owner: Int) {
+//       self.init()
+//       self.id = photoId
+//       self.photoURL = photoURL
+//       self.ownerId = owner
+//    }
+//}
 

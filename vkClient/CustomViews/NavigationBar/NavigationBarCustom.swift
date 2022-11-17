@@ -7,12 +7,37 @@
 
 import UIKit
 
+protocol NavBarButtonProtocol {
+    var image: String { get set }
+    var action: (() -> ())? { get set }
+}
+
+protocol NavigationBarProtocol {
+    var title: String { get set }
+    var leftButton: NavBarButtonProtocol? { get set }
+    var rightButton: NavBarButtonProtocol? { get set }
+    var isSearchBar: Bool { get set }
+}
+
+struct NavigationBarModel: NavigationBarProtocol {
+    var title: String
+    var leftButton: NavBarButtonProtocol?
+    var rightButton: NavBarButtonProtocol?
+    var isSearchBar: Bool = false
+}
+
+struct NavBarButton: NavBarButtonProtocol {
+    var image: String
+    var action: (() -> ())?
+}
+
 class NavigationBarCustom: UIView {
 
 
+    @IBOutlet weak var leftButton: UIButton!
     @IBOutlet private weak var pageTitle: UILabel!
     @IBOutlet private weak var rightButton: UIButton!
-    @IBOutlet private weak var LeftButton: UIButton!
+
     @IBOutlet weak var searchBar: UISearchBar!
     
     
@@ -24,39 +49,58 @@ class NavigationBarCustom: UIView {
     }
     
     var view: UIView!
-    var nibName: String = "NavigationBarCustom"
-    
+    private var nibName: String = String(describing: NavigationBarCustom.self)
+
     var leftButtonAction: (() -> ())?
     var rightButtonAction: (() -> ())?
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
+    override func awakeFromNib() {
+        super.awakeFromNib()
     }
     
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setup()
-    }
+    // MARK: - Private methods
+    private func setupParentViewConstraints(navigationView: NavigationBarCustom, parentView: UIView) {
+            parentView.translatesAutoresizingMaskIntoConstraints = false
+            navigationView.translatesAutoresizingMaskIntoConstraints = false
+
+            parentView.addSubview(navigationView)
+            navigationView.topAnchor.constraint(equalTo: parentView.topAnchor).isActive = true
+            parentView.bottomAnchor.constraint(equalTo: navigationView.bottomAnchor).isActive = true
+            navigationView.leadingAnchor.constraint(equalTo: parentView.leadingAnchor).isActive = true
+            parentView.trailingAnchor.constraint(equalTo: navigationView.trailingAnchor).isActive = true
+        }
     
-    func loadFromNib() -> UIView {
-        let bundle = Bundle(for: NavigationBarCustom.self)
-        let nib = UINib(nibName: nibName, bundle: bundle)
-        let view = nib.instantiate(withOwner: self, options: nil).first as! UIView
-        return view
-    }
-    
-    func setup() {
-        view = loadFromNib()
-        view.frame = bounds
-        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        addSubview(view)
-        LeftButton.isHidden = true
-        rightButton.isHidden = true
-        searchBar.isHidden = true
+    private func setupStyle() {
         pageTitle.textColor = VKColors.labelColor
         pageTitle.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         searchBar.searchTextField.textColor = VKColors.labelColor
+    }
+    
+    // MARK: - Public methods
+    public class func instanceFromNib(model: NavigationBarProtocol, parentView: UIView!) -> NavigationBarCustom? {
+        let nib: NavigationBarCustom = NavigationBarCustom.viewForNibName()
+        nib.setupParentViewConstraints(navigationView: nib, parentView: parentView)   
+        nib.pageTitle.text = model.title
+        nib.leftButton.isHidden = true
+        nib.searchBar.isHidden = true
+        nib.rightButton.isHidden = true
+        if model.rightButton != nil {
+            nib.rightButton.isHidden = false
+            nib.rightButton.setImage(UIImage(systemName: model.rightButton?.image ?? ""), for: .normal)
+            nib.rightButtonAction = model.rightButton?.action
+        }
+        if model.leftButton != nil {
+            nib.leftButton.isHidden = false
+            nib.leftButton.setImage(UIImage(systemName: model.leftButton?.image ?? ""), for: .normal)
+            nib.leftButtonAction = model.leftButton?.action
+        }
+
+        if model.isSearchBar {
+            nib.searchBar.isHidden = false
+            nib.pageTitle.isHidden = true
+        }
+        nib.setupStyle()
+        return nib
     }
     
     public func setLeftButtonAction(action: (() -> ())?) {
@@ -73,11 +117,11 @@ class NavigationBarCustom: UIView {
     }
     
     public func hideLeftButton() {
-        LeftButton.isHidden = true
+        leftButton.isHidden = true
     }
     
     public func showLeftButton() {
-        LeftButton.isHidden = false
+        leftButton.isHidden = false
     }
     
     public func hideRightButton() {

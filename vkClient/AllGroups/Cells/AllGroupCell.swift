@@ -28,9 +28,7 @@ class AllGroupCell: UITableViewCell {
         groupName.text = group.groupName
         groupAvatar.imageView.image = UIImage(named: group.groupAvatarURL)
         memberCount.textColor = VKColors.secondLabelColor
-       // memberCount.text = "\(group.membersCount) участников"
+        memberCount.text = "\(group.membersCount ?? 0) участников"
         NetworkService.shared.downloadAvatar(from: group.groupAvatarURL, to: groupAvatar.imageView)
     }
-    
-    
 }

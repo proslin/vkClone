@@ -10,31 +10,34 @@ import UIKit
 class AllGroupsVC: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var navigationBar: NavigationBarCustom!
-    
+    @IBOutlet weak var navBarContainer: UIView!
     var allgroups: [Group] = []
     var delegate: SelectedGroupDelegate?
     var group: String!
     
+    // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureTableView()
+        setupNavBar()
+    }
+    
+    // MARK: - Private methods
+    private func configureTableView() {
         tableView.register(UINib(nibName: String(describing: AllGroupCell.self), bundle: nil), forCellReuseIdentifier: String(describing: AllGroupCell.self))
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 80
-        setNavigationBar()
-        navigationBar.searchBar.delegate = self
-        
+//        tableView.rowHeight = UITableView.automaticDimension
+//        tableView.estimatedRowHeight = 80
     }
     
-    private func setNavigationBar() {
-        navigationBar.showSearchBar()
-        navigationBar.hideTitle()
-        navigationBar.showLeftButton()
-        navigationBar.setLeftButtonAction {
-            self.navigationController?.popViewController(animated: true)
-        }
+    private func setupNavBar() {
+        let navBarButtonModel = NavBarButton(image: SFSymbols.shevron, action: { [weak self] in
+            self?.navigationController?.popViewController(animated: true)
+        })
+        let navBarModel = NavigationBarModel(title: "", leftButton: navBarButtonModel, isSearchBar: true)
+        let navBar = NavigationBarCustom.instanceFromNib(model: navBarModel, parentView: navBarContainer)
+        navBar?.searchBar.delegate = self
     }
     
     private func getGroups(searchRequest: String) {
@@ -53,7 +56,6 @@ class AllGroupsVC: UIViewController {
         }
     }
     
-    
     private func getGroupsList(groupsIds: String) {
         NetworkService.shared.getGroupsList(for: groupsIds) { [weak self] result in
             guard let self = self else { return }
@@ -71,21 +73,17 @@ class AllGroupsVC: UIViewController {
     }
     
     func addGroup(group: Group) {
-        NetworkService.shared.addGroup(for: group.groupId) { [weak self] result in
-        guard let self = self else { return }
-        switch result {
-            
-        case .success(let result):
-            if result.response == 1 {
-            print(result)
-                DispatchQueue.main.async { RealmService.shared.addGroup(group: group)}
+        NetworkService.shared.addGroup(for: group.groupId) { result in
+            switch result {
+            case .success(let result):
+                if result.response == 1 {
+                    DispatchQueue.main.async { RealmService.shared.addGroup(group: group)}
+                }
+            case .failure(let error):
+                print(error.rawValue)
             }
-        case .failure(let error):
-            print(error.rawValue)
         }
     }
-    }
-    
 }
 
 // MARK: UITableViewDataSource
@@ -112,8 +110,6 @@ extension AllGroupsVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedGroup = allgroups[indexPath.row]
         delegate?.selectedGroup(selectedGroup: selectedGroup)
-        print(selectedGroup)
-//        addGroup(group: selectedGroup)
         self.navigationController?.popViewController(animated: true)
     }
 }
@@ -121,7 +117,6 @@ extension AllGroupsVC: UITableViewDelegate {
 // MARK: UISearchBarDelegate
 extension AllGroupsVC: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print("Ввели запрос - \(searchText)")
         if !searchText.isEmpty{
             getGroups(searchRequest: searchText)
         } else {

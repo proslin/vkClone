@@ -11,17 +11,7 @@ class AvatarView: UIView {
     
     var imageView: UIImageView!
     
-    private func setupView() {
-        imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-        let image = UIImage(named: "cat")
-        imageView.image = image
-        self.addSubview(imageView)
-        
-        imageView.layer.cornerRadius = imageView.frame.height/2
-        imageView.clipsToBounds = true
-        
-    }
-    
+    // MARK: - Init methods
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupView()
@@ -30,6 +20,18 @@ class AvatarView: UIView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.setupView()
+    }
+    
+    // MARK: - Private methods
+    private func setupView() {
+        imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+        let image = UIImage(named: "user")
+        imageView.image = image
+        self.addSubview(imageView)
+        
+        imageView.layer.cornerRadius = imageView.frame.height/2
+        imageView.clipsToBounds = true
+        
     }
     
 }

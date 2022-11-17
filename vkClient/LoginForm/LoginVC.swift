@@ -16,6 +16,7 @@ class LoginVC: UIViewController {
         }
     }
     
+    // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -32,12 +33,10 @@ class LoginVC: UIViewController {
         let request = URLRequest(url: urlComponents.url!)
     
         webView.load(request)
-        
     }
-    
-
 }
 
+// MARK: WKNavigationDelegate
 extension LoginVC: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse:
     WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
@@ -60,6 +59,4 @@ extension LoginVC: WKNavigationDelegate {
         let tabBarController = (self.storyboard?.instantiateViewController(withIdentifier: "TabBarControllerKey"))!
         present(tabBarController, animated: true, completion: nil)
     decisionHandler(.cancel) }
-    
-   
 }

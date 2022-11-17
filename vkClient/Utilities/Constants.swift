@@ -8,7 +8,8 @@
 import UIKit
 
 enum SFSymbols {
-    static let plus = UIImage(systemName: "plus")
+    static let plus = "plus"
+    static let shevron = "chevron.backward"
 }
 
 enum VKColors {
