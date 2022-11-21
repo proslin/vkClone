@@ -6,13 +6,13 @@
 //
 
 import UIKit
-
-class UserSettings {
+final class UserSettings {
+    static let shared = UserSettings()
     let defaults = UserDefaults.standard
     var entryCount = 1
     let entryCountKey = "entryCount"
     
-    init() {
+   private init() {
         loadSettings()
     }
     

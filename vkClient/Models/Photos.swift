@@ -23,9 +23,9 @@ class Photo: Object, Codable {
     @objc dynamic var id: Int = 0
     ///Id владельца фото
     @objc dynamic var ownerId: Int = 0
-    
+    /// массив фотографий пользователя разных размеров содерж url и type(sizes)
     var sizes: [Sizes] = []
-    /// URL фото
+    /// URL фото из sizes размера  "m"
     @objc dynamic var photoURL: String = ""
     
     enum CodingKeys: String, CodingKey {

@@ -12,7 +12,7 @@ protocol SelectedGroupDelegate: AnyObject {
     func selectedGroup(selectedGroup: Group)
 }
 
-class UserGroupsVC: UIViewController {
+final class UserGroupsViewController: UIViewController {
     
     @IBOutlet weak var navigationBarContainer: UIView!
     @IBOutlet weak var tableView: UITableView!
@@ -24,7 +24,7 @@ class UserGroupsVC: UIViewController {
     
     var groups: Results<Group>?
     var token: NotificationToken?
-    var userSettings = UserSettings()
+    var userSettings = UserSettings.shared
     
     // MARK: - Life cycle
     override func viewDidLoad() {
@@ -51,7 +51,7 @@ class UserGroupsVC: UIViewController {
     
     private func setupNavBar() {
         let navBarButtonModel = NavBarButton(image: SFSymbols.plus, action: { [weak self] in
-            let allGroupVC =  self?.storyboard?.instantiateViewController(withIdentifier: "allGroupsVCKey") as! AllGroupsVC
+            let allGroupVC =  self?.storyboard?.instantiateViewController(withIdentifier: "allGroupsVCKey") as! AllGroupsViewController
             allGroupVC.delegate = self
             self?.show(allGroupVC, sender: nil)
         })
@@ -73,7 +73,6 @@ class UserGroupsVC: UIViewController {
                     RealmService.shared.saveGroups(groups)
                     self.refreshControl.endRefreshing()
                     self.pairTableAndRealm()
-                    self.tableView.reloadData()
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
@@ -94,7 +93,7 @@ class UserGroupsVC: UIViewController {
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                self.presentAlertVC(title: "Ошибка", message: error.rawValue)
+                    self.presentAlertVC(title: "Ошибка", message: error.rawValue)
                 }
                 print(error.rawValue)
             }
@@ -117,7 +116,7 @@ class UserGroupsVC: UIViewController {
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                self.presentAlertVC(title: "Пользователь не добавлен", message: error.rawValue)
+                    self.presentAlertVC(title: "Вы не смогли вступить в группу", message: error.rawValue)
                 }
                 print(error.rawValue)
             }
@@ -139,21 +138,18 @@ class UserGroupsVC: UIViewController {
                 tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0)}), with: .automatic)
                 tableView.endUpdates()
             case .error(let error):
-                DispatchQueue.main.async {
-                    self?.presentAlertVC(title: "Ошибка", message: "\(error)")
-                }
+                self?.presentAlertVC(title: "Ошибка", message: "\(error)")
             }
         }
     }
     
     @objc func refresh(sender: UIRefreshControl) {
         getGroups()
-        pairTableAndRealm()
     }
 }
 
 // MARK: - Table view data source
-extension UserGroupsVC: UITableViewDataSource {
+extension UserGroupsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return groups?.count ?? 0
     }
@@ -168,7 +164,7 @@ extension UserGroupsVC: UITableViewDataSource {
 }
 
 // MARK: - Table view delegate
-extension UserGroupsVC: UITableViewDelegate {
+extension UserGroupsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
@@ -184,7 +180,7 @@ extension UserGroupsVC: UITableViewDelegate {
 }
 
 // MARK: - SelectedGroupDelegate
-extension UserGroupsVC: SelectedGroupDelegate {
+extension UserGroupsViewController: SelectedGroupDelegate {
     func selectedGroup(selectedGroup: Group) {
         addGroup(group: selectedGroup)
         pairTableAndRealm()

@@ -31,7 +31,6 @@ class AvatarView: UIView {
         
         imageView.layer.cornerRadius = imageView.frame.height/2
         imageView.clipsToBounds = true
-        
     }
     
 }

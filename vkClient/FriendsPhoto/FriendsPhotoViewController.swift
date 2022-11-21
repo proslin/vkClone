@@ -8,8 +8,7 @@
 import UIKit
 import RealmSwift
 
-class FriendsPhotoVC: UIViewController {
-    
+final class FriendsPhotoViewController: UIViewController {
    
     @IBOutlet weak var navigationBarContainer: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -33,12 +32,11 @@ class FriendsPhotoVC: UIViewController {
         pairTableAndRealm()
         configureCollectionView()
         setupNavBar()
-        
     }
     
     // MARK: - Private methods
     private func configureCollectionView() {
-        self.collectionView.register(UINib(nibName: String(describing: FriendPhotoCellXib.self), bundle: nil), forCellWithReuseIdentifier: String(describing: FriendPhotoCellXib.self))
+        self.collectionView.register(UINib(nibName: String(describing: FriendPhotoCell.self), bundle: nil), forCellWithReuseIdentifier: String(describing: FriendPhotoCell.self))
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
         self.collectionView.backgroundColor = .systemBackground
@@ -81,13 +79,12 @@ class FriendsPhotoVC: UIViewController {
                     RealmService.shared.savePhoto(currentResponseWithURL, ownerId: ownerId, isLoadimgMorePhoto: isLoadingMorePhotos)
                     self.refreshControl.endRefreshing()
                     self.pairTableAndRealm()
-                    self.collectionView.reloadData()
+                    //self.collectionView.reloadData()
                 }
                 
             case .failure(let error):
-                print(error.rawValue)
                 DispatchQueue.main.async {
-                self.presentAlertVC(title: "Ошибка", message: error.rawValue)
+                    self.presentAlertVC(title: "Ошибка", message: error.rawValue)
                 }
             }
         }
@@ -109,9 +106,9 @@ class FriendsPhotoVC: UIViewController {
                     collectionView.reloadItems(at: modifications.map({
                         IndexPath(row: $0, section: 0) })) }, completion: nil)
             case .error(let error):
-                DispatchQueue.main.async {
+               // DispatchQueue.main.async {
                     self?.presentAlertVC(title: "Ошибка", message: "\(error)")
-                }
+              //  }
             }
         }
         
@@ -123,13 +120,13 @@ class FriendsPhotoVC: UIViewController {
 }
 
 // MARK: UICollectionViewDataSource
-extension FriendsPhotoVC: UICollectionViewDataSource {
+extension FriendsPhotoViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photos?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: FriendPhotoCellXib.self), for: indexPath) as! FriendPhotoCellXib
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: FriendPhotoCell.self), for: indexPath) as! FriendPhotoCell
         NetworkService.shared.downloadAvatar(from: photos?[indexPath.row].photoURL ?? "", to: cell.photo)
         return cell
         
@@ -137,7 +134,7 @@ extension FriendsPhotoVC: UICollectionViewDataSource {
 }
 
 // MARK: UICollectionViewDelegate
-extension FriendsPhotoVC: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+extension FriendsPhotoViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if offset < photosCount  && photosCount > (200 + offset) && indexPath.row == (photos?.count ?? 0) - 1 {
             offset += 200

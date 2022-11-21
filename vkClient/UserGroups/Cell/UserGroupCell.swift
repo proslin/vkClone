@@ -7,18 +7,19 @@
 
 import UIKit
 
-class UserGroupCell: UITableViewCell {
+final class UserGroupCell: UITableViewCell {
 
     @IBOutlet weak var groupName: UILabel!
     @IBOutlet weak var groupAvatar: AvatarView!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         self.selectionStyle = .none
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        groupAvatar.imageView.image = UIImage()
     }
     
     func set(group: Group) {

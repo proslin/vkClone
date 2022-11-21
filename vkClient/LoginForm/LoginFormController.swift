@@ -4,10 +4,12 @@
 //
 //  Created by Lina Prosvetova on 23.09.2022.
 //
+// Данный контроллер был реализован для выполнения 1 задания. В дальнейшем в проекте он не используется.
+// Вместо него используется LoginViewController
 
 import UIKit
 
-class LoginFormController: UIViewController {
+final class LoginFormController: UIViewController {
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var loginInput: UITextField!

@@ -24,7 +24,7 @@ struct ResponseGroup: Codable {
 class Group: Object, Codable {
     ///название группы
     @objc dynamic var groupName: String = ""
-    ///URLаватара
+    ///URL аватара
     @objc dynamic var groupAvatarURL: String = ""
     ///количество участников
     var membersCount: Int?

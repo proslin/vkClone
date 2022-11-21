@@ -8,7 +8,7 @@
 import UIKit
 import RealmSwift
 
-class FriendsVC: UIViewController {
+final class FriendsViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var navBarContainer: UIView!
@@ -22,14 +22,14 @@ class FriendsVC: UIViewController {
     var friends: Results<Friend>?
     var token: NotificationToken?
     var entryCount: Int = 1
-    let userSettings = UserSettings()
+    let userSettings = UserSettings.shared
     
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
         setupNavBar()
-        switch userSettings.entryCount {
+        switch UserSettings.shared.entryCount {
         case 1:
             getFriends()
             userSettings.entryCount += 1
@@ -54,7 +54,7 @@ class FriendsVC: UIViewController {
     // MARK: - Private methods
     private func configureTableView() {
         self.tableView.refreshControl = refreshControl
-        self.tableView.register(UINib(nibName: String(describing: FriendCellXib.self), bundle: nil), forCellReuseIdentifier: String(describing: FriendCellXib.self))
+        self.tableView.register(UINib(nibName: String(describing: FriendCell.self), bundle: nil), forCellReuseIdentifier: String(describing: FriendCell.self))
         self.tableView.dataSource = self
         self.tableView.delegate = self
     }
@@ -78,12 +78,10 @@ class FriendsVC: UIViewController {
                     RealmService.shared.saveFriends(friends)
                     self.refreshControl.endRefreshing()
                     self.pairTableAndRealm()
-                    self.tableView.reloadData()
                 }
             case .failure(let error):
-                print(error.rawValue)
                 DispatchQueue.main.async {
-                self.presentAlertVC(title: "Ошибка", message: error.rawValue)
+                    self.presentAlertVC(title: "Ошибка", message: error.rawValue)
                 }
             }
         }
@@ -108,22 +106,22 @@ class FriendsVC: UIViewController {
                                      with: .automatic)
                 tableView.endUpdates()
             case .error(let error):
-                DispatchQueue.main.async {
+               // DispatchQueue.main.async {
                     self?.presentAlertVC(title: "Ошибка", message: "\(error)")
-                }
+              //  }
             }
         }
     }
 }
 
 // MARK: - Table view data source
-extension FriendsVC: UITableViewDataSource{
+extension FriendsViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return friends?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: FriendCellXib.self)) as! FriendCellXib
+        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: FriendCell.self)) as! FriendCell
         guard let friends = friends else { return cell }
         let friend = friends[indexPath.row]
         cell.set(friend: friend)
@@ -132,7 +130,7 @@ extension FriendsVC: UITableViewDataSource{
 }
 
 // MARK: - Table view delegate
-extension FriendsVC: UITableViewDelegate {
+extension FriendsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         80
     }
@@ -140,7 +138,7 @@ extension FriendsVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let friends = friends else { return }
         let selectedFriend = friends[indexPath.row]
-        let vc = storyboard?.instantiateViewController(withIdentifier: "FriendsPhotoVCKey") as! FriendsPhotoVC
+        let vc = storyboard?.instantiateViewController(withIdentifier: "FriendsPhotoVCKey") as! FriendsPhotoViewController
         vc.selectedModel = selectedFriend
         self.show(vc, sender: nil)
     }

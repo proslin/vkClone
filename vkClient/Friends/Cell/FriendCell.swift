@@ -7,17 +7,18 @@
 
 import UIKit
 
-class FriendCellXib: UITableViewCell {
+final class FriendCell: UITableViewCell {
     @IBOutlet weak var friendName: UILabel!
     @IBOutlet weak var avatarView: AvatarView!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         self.selectionStyle = .none
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        avatarView.imageView.image = UIImage()
     }
     
     func set(friend: Friend) {

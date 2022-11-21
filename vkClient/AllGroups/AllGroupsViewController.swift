@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AllGroupsVC: UIViewController {
+final class AllGroupsViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var navBarContainer: UIView!
@@ -77,7 +77,7 @@ class AllGroupsVC: UIViewController {
 }
 
 // MARK: UITableViewDataSource
-extension AllGroupsVC: UITableViewDataSource {
+extension AllGroupsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return allgroups.count
     }
@@ -92,7 +92,7 @@ extension AllGroupsVC: UITableViewDataSource {
 }
 
 // MARK: UITableViewDelegate
-extension AllGroupsVC: UITableViewDelegate {
+extension AllGroupsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
@@ -100,13 +100,12 @@ extension AllGroupsVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedGroup = allgroups[indexPath.row]
         delegate?.selectedGroup(selectedGroup: selectedGroup)
-        print(selectedGroup.groupId)
         self.navigationController?.popViewController(animated: true)
     }
 }
 
 // MARK: UISearchBarDelegate
-extension AllGroupsVC: UISearchBarDelegate {
+extension AllGroupsViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if !searchText.isEmpty{
             getGroups(searchRequest: searchText)
