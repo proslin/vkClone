@@ -101,9 +101,7 @@ final class FriendsViewController: UIViewController {
                                      with: .automatic)
                 tableView.endUpdates()
             case .error(let error):
-               // DispatchQueue.main.async {
                     self?.presentAlertVC(title: "Ошибка", message: "\(error)")
-              //  }
             }
         }
     }
