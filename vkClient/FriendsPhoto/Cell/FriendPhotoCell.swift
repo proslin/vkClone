@@ -9,5 +9,9 @@ import UIKit
 
 final class FriendPhotoCell: UICollectionViewCell {
 
-    @IBOutlet weak var photo: UIImageView!
+    @IBOutlet private weak var photo: UIImageView!
+    
+    func set(photo: PhotoModel) {
+        NetworkService.shared.downloadAvatar(from: photo.photoURL, to: self.photo)
+    }
 }

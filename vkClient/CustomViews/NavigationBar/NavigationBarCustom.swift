@@ -17,6 +17,7 @@ protocol NavigationBarProtocol {
     var leftButton: NavBarButtonProtocol? { get set }
     var rightButton: NavBarButtonProtocol? { get set }
     var isSearchBar: Bool { get set }
+    var searchBarPlaceholder: String { get set }
 }
 
 struct NavigationBarModel: NavigationBarProtocol {
@@ -24,6 +25,7 @@ struct NavigationBarModel: NavigationBarProtocol {
     var leftButton: NavBarButtonProtocol?
     var rightButton: NavBarButtonProtocol?
     var isSearchBar: Bool = false
+    var searchBarPlaceholder: String = ""
 }
 
 struct NavBarButton: NavBarButtonProtocol {
@@ -31,29 +33,22 @@ struct NavBarButton: NavBarButtonProtocol {
     var action: (() -> ())?
 }
 
-class NavigationBarCustom: UIView {
+final class NavigationBarCustom: UIView {
     
-    @IBOutlet weak var leftButton: UIButton!
+    @IBOutlet private weak var leftButton: UIButton!
     @IBOutlet private weak var pageTitle: UILabel!
     @IBOutlet private weak var rightButton: UIButton!
-    @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet private weak var searchBar: UISearchBar!
     
-    @IBAction func leftButtonTapped(_ sender: Any) {
+    @IBAction private func leftButtonTapped(_ sender: Any) {
         leftButtonAction?()
     }
-    @IBAction func rightButtonTapped(_ sender: Any) {
+    @IBAction private func rightButtonTapped(_ sender: Any) {
         rightButtonAction?()
     }
     
-    //var view: UIView!
-    //private var nibName: String = String(describing: NavigationBarCustom.self)
-    
-    var leftButtonAction: (() -> ())?
-    var rightButtonAction: (() -> ())?
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
+    private var leftButtonAction: (() -> ())?
+    private var rightButtonAction: (() -> ())?
     
     // MARK: - Private methods
     private func setupParentViewConstraints(navigationView: NavigationBarCustom, parentView: UIView) {
@@ -97,50 +92,15 @@ class NavigationBarCustom: UIView {
         if model.isSearchBar {
             nib.searchBar.isHidden = false
             nib.pageTitle.isHidden = true
+            nib.searchBar.placeholder = model.searchBarPlaceholder
+            nib.searchBar.searchTextField.becomeFirstResponder()
         }
         
         nib.setupStyle()
         return nib
     }
     
-    public func setLeftButtonAction(action: (() -> ())?) {
-        leftButtonAction = action
+    public func setSearchBarDelegate(vc: UIViewController) {
+        searchBar.delegate = (vc as! UISearchBarDelegate)
     }
-    
-    public func setRightButtonAction(action: (() -> ())?) {
-        rightButtonAction = action
-    }
-    
-    
-    public func showSearchBar() {
-        searchBar.isHidden = false
-    }
-    
-    public func hideLeftButton() {
-        leftButton.isHidden = true
-    }
-    
-    public func showLeftButton() {
-        leftButton.isHidden = false
-    }
-    
-    public func hideRightButton() {
-        rightButton.isHidden = true
-    }
-    
-    public func showRightButton() {
-        rightButton.isHidden = false
-    }
-    
-    public func setRighButtonImage(imagename: String) {
-        rightButton.setImage(UIImage(systemName: imagename), for: .normal)
-    }
-    public func hideTitle() {
-        pageTitle.isHidden = true
-    }
-    
-    public func setTitle(title: String) {
-        pageTitle.text = title
-    }
-    
 }

@@ -8,8 +8,8 @@
 import UIKit
 
 final class FriendCell: UITableViewCell {
-    @IBOutlet weak var friendName: UILabel!
-    @IBOutlet weak var avatarView: AvatarView!
+    @IBOutlet private weak var friendName: UILabel!
+    @IBOutlet private weak var avatarView: AvatarView!
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -18,13 +18,13 @@ final class FriendCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        avatarView.imageView.image = UIImage()
+        avatarView.setEmptyAvatarImage()
     }
     
-    func set(friend: Friend) {
+    func set(friend: FriendModel) {
         friendName.text =  "\(friend.firstName) \(friend.lastName)"
         friendName.textColor = VKColors.labelColor
-        NetworkService.shared.downloadAvatar(from: friend.friendAvatarURL, to: avatarView.imageView)
+        NetworkService.shared.downloadAvatar(from: friend.friendAvatarURL, to: avatarView.getAvatarImageView())
     }
     
 }

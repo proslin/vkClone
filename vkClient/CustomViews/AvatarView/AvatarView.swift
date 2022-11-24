@@ -7,9 +7,9 @@
 
 import UIKit
 
-class AvatarView: UIView {
+final class AvatarView: UIView {
     
-    var imageView: UIImageView!
+    private var imageView: UIImageView!
     
     // MARK: - Init methods
     override init(frame: CGRect) {
@@ -33,4 +33,12 @@ class AvatarView: UIView {
         imageView.clipsToBounds = true
     }
     
+    // MARK: - Public methods
+    public func getAvatarImageView() -> UIImageView {
+        return imageView
+    }
+    
+    public func setEmptyAvatarImage() {
+        imageView.image = UIImage()
+    }
 }

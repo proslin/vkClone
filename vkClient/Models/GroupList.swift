@@ -8,5 +8,5 @@
 import Foundation
 
 struct GroupsListResponse: Codable {
-    let response: [Group]
+    let response: [GroupModel]
 }

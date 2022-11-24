@@ -8,30 +8,26 @@
 import UIKit
 import RealmSwift
 
-protocol SelectedGroupDelegate: AnyObject {
-    func selectedGroup(selectedGroup: Group)
-}
-
 final class UserGroupsViewController: UIViewController {
     
-    @IBOutlet weak var navigationBarContainer: UIView!
-    @IBOutlet weak var tableView: UITableView!
-    let refreshControl: UIRefreshControl = {
+    @IBOutlet private weak var navigationBarContainer: UIView!
+    @IBOutlet private weak var tableView: UITableView!
+    private let refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refresh(sender:)), for: .valueChanged)
         return refreshControl
     }()
     
-    var groups: Results<Group>?
-    var token: NotificationToken?
-    var userSettings = UserSettings.shared
+    private var groups: Results<GroupModel>?
+    private var token: NotificationToken?
+    private var allGroupVC: AllGroupsViewController?
     
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
         setupNavBar()
-        switch userSettings.entryCount - 1 {
+        switch UserSettings.entryCount - 1 {
         case 1:
             getGroups()
         case 2..<5:
@@ -46,13 +42,15 @@ final class UserGroupsViewController: UIViewController {
     // MARK: - Private methods
     private func configureTableView() {
         tableView.register(UINib(nibName: String(describing: UserGroupCell.self), bundle: nil), forCellReuseIdentifier: String(describing: UserGroupCell.self))
-        self.tableView.dataSource = self
+        tableView.dataSource = self
+        tableView.refreshControl = refreshControl
     }
     
     private func setupNavBar() {
         let navBarButtonModel = NavBarButton(image: SFSymbols.plus, action: { [weak self] in
-            let allGroupVC =  self?.storyboard?.instantiateViewController(withIdentifier: "allGroupsVCKey") as! AllGroupsViewController
-            allGroupVC.delegate = self
+            guard let allGroupVC =  self?.storyboard?.instantiateViewController(withIdentifier: "allGroupsVCKey") as? AllGroupsViewController else { return }
+            self?.allGroupVC = allGroupVC
+            self?.allGroupVC?.delegate = self
             self?.show(allGroupVC, sender: nil)
         })
         let navBarModel = NavigationBarModel(title: "Группы", rightButton: navBarButtonModel)
@@ -78,12 +76,11 @@ final class UserGroupsViewController: UIViewController {
                 DispatchQueue.main.async {
                 self.presentAlertVC(title: "Ошибка", message: error.rawValue)
                 }
-                print(error.rawValue)
             }
         }
     }
     
-    func deleteGroup(groupId: Int) {
+    private func deleteGroup(groupId: Int) {
         NetworkService.shared.deleteGroup(for: groupId) { result in
             switch result {
                 
@@ -95,37 +92,35 @@ final class UserGroupsViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.presentAlertVC(title: "Ошибка", message: error.rawValue)
                 }
-                print(error.rawValue)
             }
         }
     }
     
-    func addGroup(group: Group) {
+    private func addGroup(group: GroupModel) {
         NetworkService.shared.addGroup(for: group.groupId) { [weak self] result in
             guard let self = self else { return }
             switch result {
                 
             case .success(let result):
-                print(result.response)
                 if result.response == 1 {
                     DispatchQueue.main.async {
                         RealmService.shared.addGroup(group: group)
                         self.refreshControl.endRefreshing()
                         self.pairTableAndRealm()
+                        self.allGroupVC?.presentAlertVC(title: "Готово", message: "Вы вступили в группу")
                     }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    self.presentAlertVC(title: "Вы не смогли вступить в группу", message: error.rawValue)
+                    self.allGroupVC?.presentAlertVC(title: "Вы не смогли вступить в группу", message: error.rawValue)
                 }
-                print(error.rawValue)
             }
         }
     }
     
-    func pairTableAndRealm() {
+    private func pairTableAndRealm() {
         guard let realm = try? Realm() else { return }
-        groups = realm.objects(Group.self)
+        groups = realm.objects(GroupModel.self)
         token = groups?.observe { [weak self] (changes: RealmCollectionChange) in
             guard let tableView = self?.tableView else { return }
             switch changes {
@@ -155,11 +150,13 @@ extension UserGroupsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: UserGroupCell.self)) as! UserGroupCell
-        guard let groups = groups else { return cell }
-        let group = groups[indexPath.row]
-        cell.set(group: group)
-        return cell
+        if let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: UserGroupCell.self)) as? UserGroupCell,
+           let group = groups?[indexPath.row] {
+            cell.set(group: group)
+            return cell
+        } else {
+            return UITableViewCell()
+        }
     }
 }
 
@@ -181,8 +178,7 @@ extension UserGroupsViewController: UITableViewDelegate {
 
 // MARK: - SelectedGroupDelegate
 extension UserGroupsViewController: SelectedGroupDelegate {
-    func selectedGroup(selectedGroup: Group) {
+    func selectedGroup(selectedGroup: GroupModel) {
         addGroup(group: selectedGroup)
-        pairTableAndRealm()
     }
 }

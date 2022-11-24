@@ -9,16 +9,15 @@ import UIKit
 import RealmSwift
 
 struct NetworkService {
-    static let shared   = NetworkService()
+    static let shared = NetworkService()
     private let baseUrl = "https://api.vk.com/method"
-    let token           = Session.shared.token
-    let cache           = NSCache<NSString, UIImage>()
+    private let token = Session.shared.token
+    private let cache = NSCache<NSString, UIImage>()
     
     private init() {}
     
-    func getFriends(completed: @escaping (Result<[Friend], ErrorMessage>) -> Void) {
+    func getFriends(completed: @escaping (Result<[FriendModel], ErrorMessage>) -> Void) {
         let urlRequest = baseUrl + "/friends.get?fields=photo_100&access_token=\(token)&v=5.124"
-        print(urlRequest)
         guard let url = URL(string: urlRequest) else {
             completed(.failure(.invalidUsername))
             return
@@ -45,7 +44,6 @@ struct NetworkService {
                 let friends = friendsResponse.response.items
                 completed(.success(friends))
             } catch {
-                print(error)
                 completed(.failure(.invalidData))
                 return
             }
@@ -54,7 +52,7 @@ struct NetworkService {
         task.resume()
     }
     
-    func getGroups(completed: @escaping (Result<[Group], ErrorMessage>) -> Void) {
+    func getGroups(completed: @escaping (Result<[GroupModel], ErrorMessage>) -> Void) {
         let urlRequest = baseUrl + "/groups.get?extended=1&access_token=\(token)&v=5.124"
         
         guard let url = URL(string: urlRequest) else {
@@ -83,7 +81,6 @@ struct NetworkService {
                 let groups = groupsResponse.response.items
                 completed(.success(groups))
             } catch {
-                print(error)
                 completed(.failure(.invalidData))
                 return
             }
@@ -93,13 +90,12 @@ struct NetworkService {
     }
     
     
-    func getSearchGroups(for searchRequest: String, completed: @escaping (Result<[Group], ErrorMessage>) -> Void) {
+    func getSearchGroups(for searchRequest: String, completed: @escaping (Result<[GroupModel], ErrorMessage>) -> Void) {
         let urlComponents = makeUrlComponentsForSearch(with: searchRequest)
         guard let url = urlComponents.url else {
             completed(.failure(.invalidUsername))
             return
         }
-        print(url)
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             
             if let _ = error {
@@ -122,7 +118,6 @@ struct NetworkService {
                 let groups = groupsResponse.response.items
                 completed(.success(groups))
             } catch {
-                print(error)
                 completed(.failure(.invalidData))
                 return
             }
@@ -157,7 +152,6 @@ struct NetworkService {
                 let groupDeleteResponse = try decoder.decode(GroupDeleteAddResponse.self, from: data)
                 completed(.success(groupDeleteResponse))
             } catch {
-                print(error)
                 completed(.failure(.invalidData))
                 return
             }
@@ -193,7 +187,6 @@ struct NetworkService {
                 let groupAddResponse = try decoder.decode(GroupDeleteAddResponse.self, from: data)
                 completed(.success(groupAddResponse))
             } catch {
-                print(error)
                 completed(.failure(.invalidData))
                 return
             }
@@ -202,7 +195,7 @@ struct NetworkService {
         task.resume()
     }
     
-    func getGroupsList(for groupsIds: String, completed: @escaping (Result<[Group], ErrorMessage>) -> Void) {
+    func getGroupsList(for groupsIds: String, completed: @escaping (Result<[GroupModel], ErrorMessage>) -> Void) {
         let urlRequest = baseUrl + "/groups.getById?group_ids=\(groupsIds)&access_token=\(token)&v=5.124&fields=members_count"
         
         guard let url = URL(string: urlRequest) else {
@@ -231,7 +224,6 @@ struct NetworkService {
                 let groups = groupsResponse.response
                 completed(.success(groups))
             } catch {
-                print(error)
                 completed(.failure(.invalidData))
                 return
             }
@@ -281,13 +273,12 @@ struct NetworkService {
                 let photosResponse = try decoder.decode(PhotosResponse.self, from: data)
                 completed(.success(photosResponse))
             } catch {
-                print(error)
                 completed(.failure(.invalidData))
                 return
             }
         }
         
-        task.resume()
+    task.resume()
     }
     
     func downloadAvatar(from urlString: String, to avatar: UIImageView) {
@@ -301,17 +292,17 @@ struct NetworkService {
         
         guard let url = URL(string: urlString) else { return }
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
-
+            
             if error != nil { return }
             guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { return }
             guard let data = data else { return }
-
+            
             guard let image = UIImage(data: data) else { return }
             self.cache.setObject(image, forKey: cacheKey)
             
             DispatchQueue.main.async { avatar.image = image }
         }
-
+        
         task.resume()
-}
+    }
 }

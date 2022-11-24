@@ -7,22 +7,8 @@
 
 import UIKit
 final class UserSettings {
-    static let shared = UserSettings()
-    let defaults = UserDefaults.standard
-    var entryCount = 1
-    let entryCountKey = "entryCount"
-    
-   private init() {
-        loadSettings()
-    }
-    
-    func saveSettings() {
-        defaults.set(entryCount, forKey: entryCountKey)
-    }
-    
-    func loadSettings() {
-        guard defaults.value(forKey: entryCountKey) != nil else { return }
-        entryCount = defaults.integer(forKey: entryCountKey )
-        
+    static var entryCount: Int {
+        set { UserDefaults.standard.set(newValue, forKey: VKConstants.entryCountKey) }
+        get { return UserDefaults.standard.integer(forKey: VKConstants.entryCountKey)}
     }
 }

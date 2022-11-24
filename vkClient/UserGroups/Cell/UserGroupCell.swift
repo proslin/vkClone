@@ -9,8 +9,8 @@ import UIKit
 
 final class UserGroupCell: UITableViewCell {
 
-    @IBOutlet weak var groupName: UILabel!
-    @IBOutlet weak var groupAvatar: AvatarView!
+    @IBOutlet private weak var groupName: UILabel!
+    @IBOutlet private weak var groupAvatar: AvatarView!
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -19,13 +19,16 @@ final class UserGroupCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        groupAvatar.imageView.image = UIImage()
+        groupAvatar.setEmptyAvatarImage()
     }
     
-    func set(group: Group) {
+    func set(group: GroupModel) {
+        let deleteAction = UIContextualAction()
+        deleteAction.title = "Удалить"
         groupName.text = group.groupName
+        groupName.numberOfLines = 2
         groupName.textColor = VKColors.labelColor
-        NetworkService.shared.downloadAvatar(from: group.groupAvatarURL, to: groupAvatar.imageView)
+        NetworkService.shared.downloadAvatar(from: group.groupAvatarURL, to: groupAvatar.getAvatarImageView())
     }
     
 }

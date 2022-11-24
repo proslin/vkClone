@@ -10,38 +10,33 @@ import RealmSwift
 
 final class FriendsViewController: UIViewController {
     
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var navBarContainer: UIView!
+    @IBOutlet private weak var tableView: UITableView!
+    @IBOutlet private weak var navBarContainer: UIView!
     
-    let refreshControl: UIRefreshControl = {
+    private let refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refresh(sender:)), for: .valueChanged)
         return refreshControl
     }()
-    var navBar: UIView!
-    var friends: Results<Friend>?
-    var token: NotificationToken?
-    var entryCount: Int = 1
-    let userSettings = UserSettings.shared
+    private var navBar: UIView!
+    private var friends: Results<FriendModel>?
+    private var token: NotificationToken?
     
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
         setupNavBar()
-        switch UserSettings.shared.entryCount {
+        switch UserSettings.entryCount {
         case 1:
             getFriends()
-            userSettings.entryCount += 1
-            userSettings.saveSettings()
+            UserSettings.entryCount += 1
         case 2..<5:
             pairTableAndRealm()
-            userSettings.entryCount += 1
-            userSettings.saveSettings()
+            UserSettings.entryCount += 1
         case 5:
             getFriends()
-            userSettings.entryCount = 1
-            userSettings.saveSettings()
+            UserSettings.entryCount = 1
         default:
             getFriends()
         }
@@ -53,10 +48,10 @@ final class FriendsViewController: UIViewController {
     
     // MARK: - Private methods
     private func configureTableView() {
-        self.tableView.refreshControl = refreshControl
-        self.tableView.register(UINib(nibName: String(describing: FriendCell.self), bundle: nil), forCellReuseIdentifier: String(describing: FriendCell.self))
-        self.tableView.dataSource = self
-        self.tableView.delegate = self
+        tableView.refreshControl = refreshControl
+        tableView.register(UINib(nibName: String(describing: FriendCell.self), bundle: nil), forCellReuseIdentifier: String(describing: FriendCell.self))
+        tableView.dataSource = self
+        tableView.delegate = self
     }
     
     private func setupNavBar() {
@@ -89,7 +84,7 @@ final class FriendsViewController: UIViewController {
     
     private func pairTableAndRealm() {
         guard let realm = try? Realm() else { return }
-        friends = realm.objects(Friend.self)
+        friends = realm.objects(FriendModel.self)
         token = friends?.observe { [weak self] (changes: RealmCollectionChange) in
             guard let tableView = self?.tableView else { return }
             switch changes {
@@ -121,11 +116,14 @@ extension FriendsViewController: UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: FriendCell.self)) as! FriendCell
-        guard let friends = friends else { return cell }
-        let friend = friends[indexPath.row]
-        cell.set(friend: friend)
-        return cell
+        
+        if let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: FriendCell.self)) as? FriendCell,
+           let friend = friends?[indexPath.row] {
+            cell.set(friend: friend)
+            return cell
+        } else {
+            return UITableViewCell()
+        }
     }
 }
 

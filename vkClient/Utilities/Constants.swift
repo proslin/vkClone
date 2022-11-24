@@ -16,3 +16,11 @@ enum VKColors {
     static let labelColor = UIColor.darkGray
     static let secondLabelColor = UIColor.lightGray
 }
+
+enum VKConstants {
+   static let entryCountKey = "entryCount"
+}
+
+enum VKDimensions {
+    static let padding: CGFloat = 12
+}

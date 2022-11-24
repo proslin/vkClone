@@ -10,41 +10,36 @@ import RealmSwift
 
 final class FriendsPhotoViewController: UIViewController {
    
-    @IBOutlet weak var navigationBarContainer: UIView!
-    @IBOutlet weak var collectionView: UICollectionView!
-    let refreshControl: UIRefreshControl = {
+    @IBOutlet private weak var navigationBarContainer: UIView!
+    @IBOutlet private weak var collectionView: UICollectionView!
+    private let refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refresh(sender:)), for: .valueChanged)
         return refreshControl
     }()
     
-    var offset = 0
-    var photosCount: Int = 0
-    var selectedModel: Friend?
-    var photos: Results<Photo>?
-    var token: NotificationToken?
+    private var offset = 0
+    private var photosCount: Int = 0
+    private var photos: Results<PhotoModel>?
+    private var token: NotificationToken?
+    var selectedModel: FriendModel?
     
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.refreshControl = refreshControl
         getPhotos(offset: 0)
-        pairTableAndRealm()
         configureCollectionView()
         setupNavBar()
     }
     
     // MARK: - Private methods
     private func configureCollectionView() {
-        self.collectionView.register(UINib(nibName: String(describing: FriendPhotoCell.self), bundle: nil), forCellWithReuseIdentifier: String(describing: FriendPhotoCell.self))
-        self.collectionView.dataSource = self
-        self.collectionView.delegate = self
-        self.collectionView.backgroundColor = .systemBackground
-        self.collectionView.collectionViewLayout = UIHelper.createThreeColumnFlowLayout(in: view)
-    }
-    
-    @objc func refresh(sender: UIRefreshControl) {
-        getPhotos(offset: 0)
+        collectionView.register(UINib(nibName: String(describing: FriendPhotoCell.self), bundle: nil), forCellWithReuseIdentifier: String(describing: FriendPhotoCell.self))
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.backgroundColor = .systemBackground
+        collectionView.collectionViewLayout = UIHelper.createThreeColumnFlowLayout(width: view.bounds.width, padding: VKDimensions.padding)
     }
     
     private func setupNavBar() {
@@ -79,7 +74,6 @@ final class FriendsPhotoViewController: UIViewController {
                     RealmService.shared.savePhoto(currentResponseWithURL, ownerId: ownerId, isLoadimgMorePhoto: isLoadingMorePhotos)
                     self.refreshControl.endRefreshing()
                     self.pairTableAndRealm()
-                    //self.collectionView.reloadData()
                 }
                 
             case .failure(let error):
@@ -91,8 +85,8 @@ final class FriendsPhotoViewController: UIViewController {
     }
     
     private func pairTableAndRealm() {
-        guard let realm = try? Realm(), let owner = realm.object(ofType: Friend.self, forPrimaryKey: selectedModel?.friendId) else { return }
-        photos = realm.objects(Photo.self).filter("ownerId == %@", owner.friendId)
+        guard let realm = try? Realm(), let owner = realm.object(ofType: FriendModel.self, forPrimaryKey: selectedModel?.friendId) else { return }
+        photos = realm.objects(PhotoModel.self).filter("ownerId == %@", owner.friendId)
         token = photos?.observe { [weak self] (changes: RealmCollectionChange) in
             guard let collectionView = self?.collectionView else { return }
             switch changes {
@@ -106,16 +100,19 @@ final class FriendsPhotoViewController: UIViewController {
                     collectionView.reloadItems(at: modifications.map({
                         IndexPath(row: $0, section: 0) })) }, completion: nil)
             case .error(let error):
-               // DispatchQueue.main.async {
-                    self?.presentAlertVC(title: "Ошибка", message: "\(error)")
-              //  }
+                self?.presentAlertVC(title: "Ошибка", message: "\(error)")
             }
         }
         
     }
 
-    private func getPhotoUrl(photo: Photo) -> String? {
+    private func getPhotoUrl(photo: PhotoModel) -> String? {
         photo.sizes.first(where: { $0.type == "m" })?.url
+    }
+    
+    
+    @objc func refresh(sender: UIRefreshControl) {
+        getPhotos(offset: 0)
     }
 }
 
@@ -126,10 +123,13 @@ extension FriendsPhotoViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: FriendPhotoCell.self), for: indexPath) as! FriendPhotoCell
-        NetworkService.shared.downloadAvatar(from: photos?[indexPath.row].photoURL ?? "", to: cell.photo)
-        return cell
-        
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: FriendPhotoCell.self), for: indexPath) as? FriendPhotoCell,
+           let photo = photos?[indexPath.row] {
+            cell.set(photo: photo)
+            return cell
+        } else {
+            return UICollectionViewCell()
+        }
     }
 }
 

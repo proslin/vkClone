@@ -1,5 +1,5 @@
 //
-//  RealmManager.swift
+//  RealmService.swift
 //  vkClient
 //
 //  Created by Lina Prosvetova on 07.11.2022.
@@ -13,11 +13,11 @@ struct RealmService {
     
     private init() {}
     
-    public func saveFriends(_ friends: [Friend]) {
+    func saveFriends(_ friends: [FriendModel]) {
         do {
             let realm = try Realm()
             realm.beginWrite()
-            realm.delete(realm.objects(Friend.self))
+            realm.delete(realm.objects(FriendModel.self))
             realm.add(friends, update: .all)
             try  realm.commitWrite()
         } catch {
@@ -25,11 +25,11 @@ struct RealmService {
         }
     }
     
-    public func saveGroups(_ groups: [Group]) {
+    func saveGroups(_ groups: [GroupModel]) {
         do {
             let realm = try Realm()
             realm.beginWrite()
-            realm.delete(realm.objects(Group.self))
+            realm.delete(realm.objects(GroupModel.self))
             realm.add(groups, update: .all)
             try  realm.commitWrite()
         } catch {
@@ -37,10 +37,10 @@ struct RealmService {
         }
     }
     
-    public func loadDataGroups() -> [Group] {
+    func loadDataGroups() -> [GroupModel] {
         do {
             let realm = try Realm()
-            let groups = realm.objects(Group.self)
+            let groups = realm.objects(GroupModel.self)
             return Array(groups)
         } catch {
             print(error)
@@ -48,18 +48,18 @@ struct RealmService {
         }
     }
     
-    public func deleteGroup(groupId: Int) {
+    func deleteGroup(groupId: Int) {
         do {
             let realm = try Realm()
             realm.beginWrite()
-            realm.delete(realm.objects(Group.self).filter("groupId == %@", groupId))
+            realm.delete(realm.objects(GroupModel.self).filter("groupId == %@", groupId))
             try realm.commitWrite()
         } catch  {
             print(error)
         }
     }
     
-    public func addGroup(group: Group) {
+    func addGroup(group: GroupModel) {
         do {
             let realm = try Realm()
             realm.beginWrite()
@@ -70,13 +70,12 @@ struct RealmService {
         }
     }
 
-    public func savePhoto(_ photos: [Photo], ownerId: Int, isLoadimgMorePhoto: Bool = false) {
+    func savePhoto(_ photos: [PhotoModel], ownerId: Int, isLoadimgMorePhoto: Bool = false) {
         do {
             let realm = try Realm()
-            print(realm.configuration.fileURL as Any)
             realm.beginWrite()
             if !isLoadimgMorePhoto {
-            realm.delete(realm.objects(Photo.self).filter("ownerId == %@", ownerId))
+            realm.delete(realm.objects(PhotoModel.self).filter("ownerId == %@", ownerId))
             }
             realm.add(photos, update: .all)
             try  realm.commitWrite()
