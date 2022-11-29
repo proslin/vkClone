@@ -21,7 +21,7 @@ final class LoginFormController: UIViewController {
         let hideKeyboardGesture = UITapGestureRecognizer(target: self, action: #selector(self.hideKeyboard))
         // присваиваем его UIScrollVIew
         scrollView?.addGestureRecognizer(hideKeyboardGesture)
-
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -42,9 +42,9 @@ final class LoginFormController: UIViewController {
     
     @IBAction func loginButtonPressed(_ sender: Any) {
         // получаем текст логина
-        let login = loginInput.text!
+        let login = loginInput.text ?? ""
         // получаем текст пароль
-        let password = passwordInput.text!
+        let password = passwordInput.text ?? ""
         
         // проверяем верны ли они
         if login == "admin" && password == "123456" {
@@ -62,9 +62,9 @@ final class LoginFormController: UIViewController {
     @objc func keyboardWasShown(notification: Notification) {
         
         // получаем размер клавиатуры
-        let info = notification.userInfo! as NSDictionary
-        let kbSize = (info.value(forKey: UIResponder.keyboardFrameEndUserInfoKey) as! NSValue).cgRectValue.size
-        let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: kbSize.height, right: 0.0)
+        guard let info = notification.userInfo as NSDictionary? else { return }
+        let kbSize = (info.value(forKey: UIResponder.keyboardFrameEndUserInfoKey) as? NSValue)?.cgRectValue.size
+        let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: kbSize?.height ?? 0, right: 0.0)
         
         // добавляем отступ внизу UIScrollView равный размеру клавиатуры
         self.scrollView?.contentInset = contentInsets

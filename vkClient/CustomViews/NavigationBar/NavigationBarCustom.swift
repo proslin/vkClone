@@ -101,6 +101,6 @@ final class NavigationBarCustom: UIView {
     }
     
     public func setSearchBarDelegate(vc: UIViewController) {
-        searchBar.delegate = (vc as! UISearchBarDelegate)
+        searchBar.delegate = vc as? UISearchBarDelegate
     }
 }

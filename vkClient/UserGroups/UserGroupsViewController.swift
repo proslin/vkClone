@@ -68,13 +68,16 @@ final class UserGroupsViewController: UIViewController {
                 
             case .success(let groups):
                 DispatchQueue.main.async {
-                    RealmService.shared.saveGroups(groups)
-                    self.refreshControl.endRefreshing()
-                    self.pairTableAndRealm()
+                    if let error = RealmService.shared.saveGroups(groups) {
+                        self.presentAlertVC(title: "Ошибка записи в БД", message: error.localizedDescription)
+                    } else {
+                        self.refreshControl.endRefreshing()
+                        self.pairTableAndRealm()
+                    }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                self.presentAlertVC(title: "Ошибка", message: error.rawValue)
+                    self.presentAlertVC(title: "Ошибка", message: error.rawValue)
                 }
             }
         }
@@ -86,7 +89,14 @@ final class UserGroupsViewController: UIViewController {
                 
             case .success(let result):
                 if result.response == 1 {
-                    DispatchQueue.main.async { RealmService.shared.deleteGroup(groupId: groupId)}
+                    DispatchQueue.main.async {
+                        if let error = RealmService.shared.deleteGroup(groupId: groupId) {
+                            self.presentAlertVC(title: "Ошибка записи в БД", message: error.localizedDescription)
+                        } else {
+                            self.refreshControl.endRefreshing()
+                            self.pairTableAndRealm()
+                        }
+                    }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
@@ -104,10 +114,13 @@ final class UserGroupsViewController: UIViewController {
             case .success(let result):
                 if result.response == 1 {
                     DispatchQueue.main.async {
-                        RealmService.shared.addGroup(group: group)
-                        self.refreshControl.endRefreshing()
-                        self.pairTableAndRealm()
-                        self.allGroupVC?.presentAlertVC(title: "Готово", message: "Вы вступили в группу")
+                        if let error = RealmService.shared.addGroup(group: group) {
+                            self.presentAlertVC(title: "Ошибка записи в БД", message: error.localizedDescription)
+                        } else {
+                            self.refreshControl.endRefreshing()
+                            self.pairTableAndRealm()
+                            self.allGroupVC?.presentAlertVC(title: "Готово", message: "Вы вступили в группу")
+                        }
                     }
                 }
             case .failure(let error):

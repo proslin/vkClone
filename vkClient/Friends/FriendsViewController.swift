@@ -18,7 +18,7 @@ final class FriendsViewController: UIViewController {
         refreshControl.addTarget(self, action: #selector(refresh(sender:)), for: .valueChanged)
         return refreshControl
     }()
-    private var navBar: UIView!
+    
     private var friends: Results<FriendModel>?
     private var token: NotificationToken?
     
@@ -70,9 +70,12 @@ final class FriendsViewController: UIViewController {
             switch result {
             case .success(let friends):
                 DispatchQueue.main.async {
-                    RealmService.shared.saveFriends(friends)
-                    self.refreshControl.endRefreshing()
-                    self.pairTableAndRealm()
+                    if let error = RealmService.shared.saveFriends(friends) {
+                        self.presentAlertVC(title: "Ошибка записи в БД", message: error.localizedDescription)
+                    } else {
+                        self.refreshControl.endRefreshing()
+                        self.pairTableAndRealm()
+                    }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
@@ -101,7 +104,7 @@ final class FriendsViewController: UIViewController {
                                      with: .automatic)
                 tableView.endUpdates()
             case .error(let error):
-                    self?.presentAlertVC(title: "Ошибка", message: "\(error)")
+                self?.presentAlertVC(title: "Ошибка", message: "\(error)")
             }
         }
     }
@@ -134,8 +137,9 @@ extension FriendsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let friends = friends else { return }
         let selectedFriend = friends[indexPath.row]
-        let vc = storyboard?.instantiateViewController(withIdentifier: "FriendsPhotoVCKey") as! FriendsPhotoViewController
-        vc.selectedModel = selectedFriend
-        self.show(vc, sender: nil)
+        if let vc = storyboard?.instantiateViewController(withIdentifier: "FriendsPhotoVCKey") as? FriendsPhotoViewController {
+            vc.selectedModel = selectedFriend
+            self.show(vc, sender: nil)
+        }
     }
 }

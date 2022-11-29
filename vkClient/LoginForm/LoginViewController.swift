@@ -9,7 +9,7 @@ import UIKit
 import WebKit
 
 final class LoginViewController: UIViewController {
-
+    
     @IBOutlet weak var webView: WKWebView! {
         didSet {
             webView.navigationDelegate = self
@@ -19,20 +19,29 @@ final class LoginViewController: UIViewController {
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "oauth.vk.com"
         urlComponents.path = "/authorize"
         urlComponents.queryItems = [
-        URLQueryItem(name: "client_id", value: "51461702"), URLQueryItem(name: "display", value: "mobile"), URLQueryItem(name: "redirect_uri", value:
-        "https://oauth.vk.com/blank.html"),
-        URLQueryItem(name: "scope", value: "262150"),
-        URLQueryItem(name: "response_type", value: "token"),
-        URLQueryItem(name: "v", value: "5.68") ]
-        let request = URLRequest(url: urlComponents.url!)
-        webView.load(request)
-
+            URLQueryItem(name: "client_id",
+                         value: "51461702"),
+            URLQueryItem(name: "display",
+                         value: "mobile"),
+            URLQueryItem(name: "redirect_uri",
+                         value: "https://oauth.vk.com/blank.html"),
+            URLQueryItem(name: "scope",
+                         value: "262150"),
+            URLQueryItem(name: "response_type",
+                         value: "token"),
+            URLQueryItem(name: "v",
+                         value: "5.68")
+        ]
+        if let url = urlComponents.url {
+            let request = URLRequest(url: url)
+            webView.load(request)
+        }
     }
 }
 
@@ -57,9 +66,10 @@ extension LoginViewController: WKNavigationDelegate {
         let token = params["access_token"]
         guard token != nil else { return }
         Session.shared.token = token ?? " "
-        let tabBarController = (self.storyboard?.instantiateViewController(withIdentifier: "TabBarControllerKey"))!
-        present(tabBarController, animated: true, completion: nil)
-    decisionHandler(.cancel)
+        if let tabBarController = self.storyboard?.instantiateViewController(withIdentifier: "TabBarControllerKey") {
+            present(tabBarController, animated: true, completion: nil)
+        }
+        decisionHandler(.cancel)
         
     }
     

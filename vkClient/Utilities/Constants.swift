@@ -19,6 +19,7 @@ enum VKColors {
 
 enum VKConstants {
    static let entryCountKey = "entryCount"
+   static let loadingViewTag = 999
 }
 
 enum VKDimensions {

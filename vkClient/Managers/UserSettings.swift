@@ -9,6 +9,6 @@ import UIKit
 final class UserSettings {
     static var entryCount: Int {
         set { UserDefaults.standard.set(newValue, forKey: VKConstants.entryCountKey) }
-        get { return UserDefaults.standard.integer(forKey: VKConstants.entryCountKey)}
+        get { return UserDefaults.standard.integer(forKey: VKConstants.entryCountKey) }
     }
 }

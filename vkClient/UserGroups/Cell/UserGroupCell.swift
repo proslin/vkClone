@@ -8,10 +8,10 @@
 import UIKit
 
 final class UserGroupCell: UITableViewCell {
-
+    
     @IBOutlet private weak var groupName: UILabel!
     @IBOutlet private weak var groupAvatar: AvatarView!
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         self.selectionStyle = .none

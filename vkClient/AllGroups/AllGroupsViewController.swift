@@ -1,5 +1,5 @@
 //
-//  AllGroupsVC.swift
+//  AllGroupsViewController.swift
 //  vkClient
 //
 //  Created by Lina Prosvetova on 26.10.2022.

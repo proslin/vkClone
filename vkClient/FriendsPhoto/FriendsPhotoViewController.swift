@@ -9,7 +9,7 @@ import UIKit
 import RealmSwift
 
 final class FriendsPhotoViewController: UIViewController {
-   
+    
     @IBOutlet private weak var navigationBarContainer: UIView!
     @IBOutlet private weak var collectionView: UICollectionView!
     private let refreshControl: UIRefreshControl = {
@@ -71,9 +71,12 @@ final class FriendsPhotoViewController: UIViewController {
                 }
                 
                 DispatchQueue.main.async {
-                    RealmService.shared.savePhoto(currentResponseWithURL, ownerId: ownerId, isLoadimgMorePhoto: isLoadingMorePhotos)
-                    self.refreshControl.endRefreshing()
-                    self.pairTableAndRealm()
+                    if let error = RealmService.shared.savePhoto(currentResponseWithURL, ownerId: ownerId, isLoadimgMorePhoto: isLoadingMorePhotos) {
+                        self.presentAlertVC(title: "Ошибка записи в БД", message: error.localizedDescription)
+                    } else {
+                        self.refreshControl.endRefreshing()
+                        self.pairTableAndRealm()
+                    }
                 }
                 
             case .failure(let error):
@@ -105,7 +108,7 @@ final class FriendsPhotoViewController: UIViewController {
         }
         
     }
-
+    
     private func getPhotoUrl(photo: PhotoModel) -> String? {
         photo.sizes.first(where: { $0.type == "m" })?.url
     }

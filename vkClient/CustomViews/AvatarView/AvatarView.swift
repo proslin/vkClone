@@ -9,7 +9,7 @@ import UIKit
 
 final class AvatarView: UIView {
     
-    private var imageView: UIImageView!
+    private var imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
     
     // MARK: - Init methods
     override init(frame: CGRect) {
@@ -24,7 +24,6 @@ final class AvatarView: UIView {
     
     // MARK: - Private methods
     private func setupView() {
-        imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
         let image = UIImage(named: "user")
         imageView.image = image
         self.addSubview(imageView)

@@ -8,7 +8,7 @@
 import UIKit
 
 final class FriendPhotoCell: UICollectionViewCell {
-
+    
     @IBOutlet private weak var photo: UIImageView!
     
     func set(photo: PhotoModel) {
