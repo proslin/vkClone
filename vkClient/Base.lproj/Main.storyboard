@@ -357,7 +357,7 @@
             </objects>
             <point key="canvasLocation" x="744.92753623188412" y="-187.5"/>
         </scene>
-        <!--Friends View Controller-->
+        <!--Друзья-->
         <scene sceneID="yZC-sm-8fO">
             <objects>
                 <viewController id="S3c-W4-QY5" customClass="FriendsViewController" customModule="vkClient" customModuleProvider="target" sceneMemberID="viewController">
@@ -389,7 +389,7 @@
                             <constraint firstItem="yGa-qG-0UQ" firstAttribute="leading" secondItem="ZeB-gP-P8C" secondAttribute="leading" id="wYq-vw-sql"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="jbF-Zq-oNz"/>
+                    <navigationItem key="navigationItem" title="Друзья" id="jbF-Zq-oNz"/>
                     <connections>
                         <outlet property="navBarContainer" destination="hRY-pu-Ny7" id="i47-Io-hxI"/>
                         <outlet property="tableView" destination="yGa-qG-0UQ" id="2cA-DP-IbQ"/>

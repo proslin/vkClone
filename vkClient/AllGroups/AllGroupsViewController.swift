@@ -73,11 +73,11 @@ final class AllGroupsViewController: UIViewController {
         }
     }
     
-    private func createTimer(serchText: String) {
+    private func createTimer(searchText: String) {
         if timer == nil {
             timer = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false) { timer in
                 timer.invalidate()
-                self.getGroups(searchRequest: serchText)
+                self.getGroups(searchRequest: searchText)
             }
         }
     }
@@ -86,7 +86,6 @@ final class AllGroupsViewController: UIViewController {
         timer?.invalidate()
         timer = nil
     }
-    
 }
 
 // MARK: UITableViewDataSource
@@ -123,7 +122,7 @@ extension AllGroupsViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if !searchText.isEmpty && searchText.count > 1 {
             cancelTimer()
-            createTimer(serchText: searchText)
+            createTimer(searchText: searchText)
         } else {
             self.allgroups.removeAll()
             self.tableView.reloadData()
